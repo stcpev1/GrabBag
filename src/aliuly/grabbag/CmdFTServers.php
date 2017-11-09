@@ -19,34 +19,35 @@ use aliuly\grabbag\common\mc;
 use aliuly\grabbag\common\PermUtils;
 use aliuly\grabbag\common\MPMU;
 
-class CmdFtServers extends BasicCli implements CommandExecutor {
+class CmdFtServers extends BasicCli implements CommandExecutor{
 
-	public function __construct($owner) {
+	public function __construct($owner){
 		parent::__construct($owner);
 		PermUtils::add($this->owner, "gb.cmd.ftserver", "Allow user to use Fast Transfer", "op");
 
 		$this->enableCmd("ftserver",
-							  ["description" => mc::_("Teleport to server via FastTransfer"),
-								"usage" => mc::_("/ftserver <serverid>"),
-								"permission" => "gb.cmd.ftserver",
-                "aliases" => ["fts"]]);
+			["description" => mc::_("Teleport to server via FastTransfer"),
+				"usage" => mc::_("/ftserver <serverid>"),
+				"permission" => "gb.cmd.ftserver",
+				"aliases" => ["fts"]]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
-    if ($cmd->getName() != "ftserver") return false;
-    if (count($args) != 1) return false;
-    $id = $args[0];
-    if (($dat = $this->owner->getModule("ServerList")->getServer($id)) === null) {
-			$c->sendMessage(TextFormat::RED.mc::_("%1% does not exist",$id));
+
+	public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool{
+		if($cmd->getName() != "ftserver") return false;
+		if(count($args) != 1) return false;
+		$id = $args[0];
+		if(($dat = $this->owner->getModule("ServerList")->getServer($id)) === null){
+			$c->sendMessage(TextFormat::RED . mc::_("%1% does not exist", $id));
 			return false;
 		}
-    if (!MPMU::inGame($sender)) return true;
-    $host = $dat["host"];
+		if(!MPMU::inGame($sender)) return true;
+		$host = $dat["host"];
 		$port = $dat["port"];
-    if (MPMU::callPlugin($this->owner->getServer(),"FastTransfer","transferPlayer",[$sender,$host,$port]) === null) {
-      $this->getLogger()->error(TextFormat::RED.mc::_("FAST TRANSFER ERROR"));
-      return true;
-    }
-    return true;
+		if(MPMU::callPlugin($this->owner->getServer(), "FastTransfer", "transferPlayer", [$sender, $host, $port]) === null){
+			$this->getLogger()->error(TextFormat::RED . mc::_("FAST TRANSFER ERROR"));
+			return true;
+		}
+		return true;
 	}
 
 }

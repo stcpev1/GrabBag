@@ -29,34 +29,35 @@ use aliuly\grabbag\common\mc;
 use aliuly\grabbag\common\MPMU;
 use aliuly\grabbag\common\PermUtils;
 
-class CmdGmx extends BasicCli implements CommandExecutor {
+class CmdGmx extends BasicCli implements CommandExecutor{
 
-	public function __construct($owner) {
+	public function __construct($owner){
 		parent::__construct($owner);
 		PermUtils::add($this->owner, "gb.cmd.gma", "Switch gamemode to Adventure", "op");
 		PermUtils::add($this->owner, "gb.cmd.gms", "Switch gamemode to Survival", "op");
 		PermUtils::add($this->owner, "gb.cmd.gmc", "Switch gamemode to Creative", "op");
 		PermUtils::add($this->owner, "gb.cmd.gmspc", "Switch gamemode to Spectator", "op");
 		$this->enableCmd("gmc",
-							  ["description" => mc::_("switch gamemode to creative"),
-								"usage" => mc::_("/gmc"),
-								"permission" => "gb.cmd.gmc"]);
+			["description" => mc::_("switch gamemode to creative"),
+				"usage" => mc::_("/gmc"),
+				"permission" => "gb.cmd.gmc"]);
 		$this->enableCmd("gms",
-							  ["description" => mc::_("switch gamemode to survival"),
-								"usage" => mc::_("/gms"),
-								"permission" => "gb.cmd.gms"]);
+			["description" => mc::_("switch gamemode to survival"),
+				"usage" => mc::_("/gms"),
+				"permission" => "gb.cmd.gms"]);
 		$this->enableCmd("gma",
-							  ["description" => mc::_("switch gamemode to adventure"),
-								"usage" => mc::_("/gma"),
-								"permission" => "gb.cmd.gma"]);
+			["description" => mc::_("switch gamemode to adventure"),
+				"usage" => mc::_("/gma"),
+				"permission" => "gb.cmd.gma"]);
 		$this->enableCmd("gmspc",
-							  ["description" => mc::_("switch gamemode to spectator"),
-								"usage" => mc::_("/gmspc"),
-								"permission" => "gb.cmd.gmspc"]);
+			["description" => mc::_("switch gamemode to spectator"),
+				"usage" => mc::_("/gmspc"),
+				"permission" => "gb.cmd.gmspc"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
-		if (!MPMU::inGame($sender)) return true;
-		switch($cmd->getName()) {
+
+	public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool{
+		if(!MPMU::inGame($sender)) return true;
+		switch($cmd->getName()){
 			case "gmc":
 				$mode = 1;
 				break;
@@ -72,18 +73,18 @@ class CmdGmx extends BasicCli implements CommandExecutor {
 			default:
 				return false;
 		}
-		if ($mode !== $sender->getGamemode()) {
+		if($mode !== $sender->getGamemode()){
 			$sender->setGamemode($mode);
-			if ($mode !== $sender->getGamemode()) {
-				$sender->sendMessage(TextFormat::RED.mc::_("Unable to change gamemode"));
-			} else {
+			if($mode !== $sender->getGamemode()){
+				$sender->sendMessage(TextFormat::RED . mc::_("Unable to change gamemode"));
+			}else{
 				$this->owner->getServer()->broadcastMessage(
 					mc::_("%1% changed gamemode to %2% mode",
-							$sender->getName(), MPMU::gamemodeStr($mode)));
+						$sender->getName(), MPMU::gamemodeStr($mode)));
 			}
-		} else {
+		}else{
 			$sender->sendMessage(
-				mc::_("You are already in %1% mode",MPMU::gamemodeStr($mode)));
+				mc::_("You are already in %1% mode", MPMU::gamemodeStr($mode)));
 		}
 		return true;
 	}

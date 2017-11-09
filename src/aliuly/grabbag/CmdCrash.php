@@ -26,90 +26,96 @@ use aliuly\grabbag\common\BasicCli;
 use aliuly\grabbag\common\mc;
 use aliuly\grabbag\common\PermUtils;
 
-class CmdCrash extends BasicCli implements CommandExecutor {
-	public function __construct($owner) {
+class CmdCrash extends BasicCli implements CommandExecutor{
+	public function __construct($owner){
 		parent::__construct($owner);
 		PermUtils::add($this->owner, "gb.cmd.crash", "crash dump management", "op");
 		$this->enableCmd("crash",
-							  ["description" => mc::_("manage crash files"),
-								"usage" => mc::_("/crash [count|clean|show|ls]"),
-								"permission" => "gb.cmd.crash"]);
+			["description" => mc::_("manage crash files"),
+				"usage" => mc::_("/crash [count|clean|show|ls]"),
+				"permission" => "gb.cmd.crash"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
-		if ($cmd->getName() != "crash") return false;
-		if (count($args) == 0) $args = [ "count" ];
+
+	public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool{
+		if($cmd->getName() != "crash") return false;
+		if(count($args) == 0) $args = ["count"];
 		$scmd = strtolower(array_shift($args));
 
-		switch($scmd) {
+		switch($scmd){
 			case "count":
 				return $this->cmdCount($sender);
 			case "clean":
-				return $this->cmdClean($sender,$args);
+				return $this->cmdClean($sender, $args);
 			case "show":
-				return $this->cmdShow($sender,$args);
+				return $this->cmdShow($sender, $args);
 			case "ls":
-				return $this->cmdLs($sender,$args);
+				return $this->cmdLs($sender, $args);
 				break;
 			default:
-				$sender->sendMessage(mc::_("Unknown sub-command %1%",$scmd));
+				$sender->sendMessage(mc::_("Unknown sub-command %1%", $scmd));
 		}
 		return false;
 	}
-	private function getCrashDumps($pattern = "*") {
-		return glob($this->owner->getServer()->getDataPath()."CrashDump_$pattern.log");
+
+	private function getCrashDumps($pattern = "*"){
+		return glob($this->owner->getServer()->getDataPath() . "CrashDump_$pattern.log");
 	}
-	private function cmdCount(CommandSender $c) {
+
+	private function cmdCount(CommandSender $c){
 		$cnt = count($this->getCrashDumps());
-		$c->sendMessage(mc::_("Total Crash Dumps: %1%",$cnt));
+		$c->sendMessage(mc::_("Total Crash Dumps: %1%", $cnt));
 		return true;
 	}
-	private function cmdClean(CommandSender $c,$args) {
-		if (count($args) == 0) $args[] = "*";
-		if (count($args) != 1) return false;
+
+	private function cmdClean(CommandSender $c, $args){
+		if(count($args) == 0) $args[] = "*";
+		if(count($args) != 1) return false;
 		$cnt = 0;
-		foreach ($this->getCrashDumps($args[0]) as $cd) {
-			if (is_file($cd)) {
+		foreach($this->getCrashDumps($args[0]) as $cd){
+			if(is_file($cd)){
 				unlink($cd);
 				++$cnt;
 			}
 		}
-		$c->sendMessage(mc::_("Crash Dumps Deleted: %1%",$cnt));
+		$c->sendMessage(mc::_("Crash Dumps Deleted: %1%", $cnt));
 		return true;
 	}
-	private function cmdLs(CommandSender $c,$args) {
+
+	private function cmdLs(CommandSender $c, $args){
 		$pageNumber = $this->getPageNumber($args);
-		if (count($args) == 0) $args[] = "*";
-		if (count($args) != 1) return false;
+		if(count($args) == 0) $args[] = "*";
+		if(count($args) != 1) return false;
 		$dumps = $this->getCrashDumps($args[0]);
-		if (count($dumps) == 0) {
+		if(count($dumps) == 0){
 			$c->sendMessage(mc::_("No crash dumps found"));
 			return true;
 		}
 		$i = 1;
-		$txt = [ mc::_("Crash Dumps: %1%",count($dumps)) ];
-		foreach ($dumps as $dump) {
+		$txt = [mc::_("Crash Dumps: %1%", count($dumps))];
+		foreach($dumps as $dump){
 			$txt[] = mc::_("%1%: %2%", $i++,
-								preg_replace('/^CrashDump_/','',basename($dump)));
+				preg_replace('/^CrashDump_/', '', basename($dump)));
 		}
-		return $this->paginateText($c,$pageNumber,$txt);
+		return $this->paginateText($c, $pageNumber, $txt);
 	}
-	private function cmdShow(CommandSender $c,$args) {
+
+	private function cmdShow(CommandSender $c, $args){
 		$pageNumber = $this->getPageNumber($args);
-		if (count($args) == 0) $args[] = "*";
-		if (count($args) != 1) return false;
+		if(count($args) == 0) $args[] = "*";
+		if(count($args) != 1) return false;
 		$dumps = $this->getCrashDumps($args[0]);
-		if (count($dumps) == 0) {
+		if(count($dumps) == 0){
 			$c->sendMessage(mc::_("No crash dumps found"));
 			return true;
 		}
 		$f = array_shift($dumps);
-		$txt = file($f,FILE_IGNORE_NEW_LINES);
-		array_unshift($txt,mc::_("Crash Dump %1%",
-										 preg_replace('/^CrashDump_/','',basename($f))));
-		if (count($dumps) > 0) {
-			array_unshift($txt,TextFormat::RED.
-							  mc::_("Multiple matches, showing first match!"));
+		$txt = file($f, FILE_IGNORE_NEW_LINES);
+		array_unshift($txt, mc::_("Crash Dump %1%",
+			preg_replace('/^CrashDump_/', '', basename($f))));
+		if(count($dumps) > 0){
+			array_unshift($txt, TextFormat::RED .
+				mc::_("Multiple matches, showing first match!"));
 		}
-		return $this->paginateText($c,$pageNumber,$txt);
+		return $this->paginateText($c, $pageNumber, $txt);
 	}
 }

@@ -15,13 +15,13 @@ use pocketmine\event\player\PlayerJoinEvent;
 
 use aliuly\grabbag\common\mc;
 
-class JoinMgr implements Listener {
+class JoinMgr implements Listener{
 	public $owner;
 	protected $admjoin;
 	protected $srvmotd;
 	static $delay = 15;
 
-	static public function defaults() {
+	static public function defaults(){
 		//= cfg:join-mgr
 		return [
 			"# adminjoin" => "broadcast whenever an op joins",
@@ -32,19 +32,20 @@ class JoinMgr implements Listener {
 	}
 
 
-	public function __construct(Plugin $plugin,$cfg) {
+	public function __construct(Plugin $plugin, $cfg){
 		$this->owner = $plugin;
 		$this->owner->getServer()->getPluginManager()->registerEvents($this, $this->owner);
 		$this->admjoin = $cfg["adminjoin"];
 		$this->srvmotd = $cfg["servermotd"];
 	}
-	public function onPlayerJoin(PlayerJoinEvent $e) {
+
+	public function onPlayerJoin(PlayerJoinEvent $e){
 		$pl = $e->getPlayer();
-		if ($pl == null) return;
-		if ($this->srvmotd) {
+		if($pl == null) return;
+		if($this->srvmotd){
 			$pl->sendMessage($this->owner->getServer()->getMotd());
 		}
-		if ($this->admjoin && $pl->isOp()) {
+		if($this->admjoin && $pl->isOp()){
 			$pn = $pl->getDisplayName();
 			$this->owner->getServer()->broadcastMessage(mc::_("Server op $pn joined."));
 		}

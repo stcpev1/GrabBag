@@ -17,37 +17,38 @@ use aliuly\grabbag\common\mc;
 use aliuly\grabbag\common\MPMU;
 use aliuly\grabbag\common\PermUtils;
 
-class CmdHeal extends BasicCli implements CommandExecutor {
-	public function __construct($owner) {
+class CmdHeal extends BasicCli implements CommandExecutor{
+	public function __construct($owner){
 		parent::__construct($owner);
 		PermUtils::add($this->owner, "gb.cmd.heal", "heal players", "op");
 		$this->enableCmd("heal",
-							  ["description" => mc::_("heal player"),
-								"usage" => mc::_("/heal [player] [amount]"),
-								"aliases" => ["cure"],
-								"permission" => "gb.cmd.heal"]);
+			["description" => mc::_("heal player"),
+				"usage" => mc::_("/heal [player] [amount]"),
+				"aliases" => ["cure"],
+				"permission" => "gb.cmd.heal"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
-		if ($cmd->getName() != "heal") return false;
-		if (count($args) == 0) {
-			if (!MPMU::inGame($sender)) return true;
+
+	public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool{
+		if($cmd->getName() != "heal") return false;
+		if(count($args) == 0){
+			if(!MPMU::inGame($sender)) return true;
 			$sender->setHealth($sender->getMaxHealth());
 			$sender->sendMessage(mc::_("You have been healed"));
 			return true;
 		}
 		$patient = $this->owner->getServer()->getPlayer($args[0]);
-		if ($patient == null) {
-			$sender->sendMessage(mc::_("%1% not found.",$args[0]));
+		if($patient == null){
+			$sender->sendMessage(mc::_("%1% not found.", $args[0]));
 			return true;
 		}
-		if (isset($args[1]) && is_numeric($args[1])) {
+		if(isset($args[1]) && is_numeric($args[1])){
 			$health = $patient->getHealth() + intval($args[1]);
-			if ($health > $patient->getMaxHealth()) $health = $patient->getMaxHealth();
-		} else {
+			if($health > $patient->getMaxHealth()) $health = $patient->getMaxHealth();
+		}else{
 			$health = $patient->getMaxHealth();
 		}
 		$patient->setHealth($health);
-		$sender->sendMessage(mc::_("%1% was healed.",$args[0]));
+		$sender->sendMessage(mc::_("%1% was healed.", $args[0]));
 		return true;
 	}
 }

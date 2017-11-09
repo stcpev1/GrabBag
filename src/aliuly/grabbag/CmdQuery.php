@@ -36,9 +36,9 @@ use aliuly\grabbag\common\PermUtils;
 use xPaw\MinecraftQuery;
 use xPaw\MinecraftQueryException;
 
-class CmdQuery extends BasicCli implements CommandExecutor {
+class CmdQuery extends BasicCli implements CommandExecutor{
 
-	public function __construct($owner) {
+	public function __construct($owner){
 		parent::__construct($owner);
 		PermUtils::add($this->owner, "gb.cmd.query", "Query command", "true");
 		PermUtils::add($this->owner, "gb.cmd.query.details", "View details (info, plugins)", "true");
@@ -47,153 +47,157 @@ class CmdQuery extends BasicCli implements CommandExecutor {
 		PermUtils::add($this->owner, "gb.cmd.query.list", "Query List sub command", "true");
 
 		$this->enableCmd("query",
-							  ["description" => mc::_("Query servers"),
-								"usage" => mc::_("/query [list|info|plugins|players|summary] <opts>"),
-								"permission" => "gb.cmd.query"]);
+			["description" => mc::_("Query servers"),
+				"usage" => mc::_("/query [list|info|plugins|players|summary] <opts>"),
+				"permission" => "gb.cmd.query"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
-		if (count($args) == 0) $args = ["summary"];
-		switch($cmd->getName()) {
+
+	public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool{
+		if(count($args) == 0) $args = ["summary"];
+		switch($cmd->getName()){
 			case "query":
-				switch ($n = strtolower(array_shift($args))) {
+				switch($n = strtolower(array_shift($args))){
 					case "info":
 					case "plugins":
-						if (!MPMU::access($sender,"gb.cmd.query.details")) return true;
-						return $this->cmdQuery($sender,$n,$args);
+						if(!MPMU::access($sender, "gb.cmd.query.details")) return true;
+						return $this->cmdQuery($sender, $n, $args);
 					case "players":
-						if (!MPMU::access($sender,"gb.cmd.query.players")) return true;
+						if(!MPMU::access($sender, "gb.cmd.query.players")) return true;
 						$pageNumber = $this->getPageNumber($args);
-					  if (count($args) && $sender->hasPermission("gb.cmd.query.players.showip")) {
-							return $this->cmdQuery($sender,$n,$args,$pageNumber);
+						if(count($args) && $sender->hasPermission("gb.cmd.query.players.showip")){
+							return $this->cmdQuery($sender, $n, $args, $pageNumber);
 						}
-						return $this->cmdPlayers($sender,$pageNumber);
+						return $this->cmdPlayers($sender, $pageNumber);
 					case "list":
-							if (!MPMU::access($sender,"gb.cmd.query.list")) return true;
-							$pageNumber = $this->getPageNumber($args);
-							return $this->cmdListAll($sender,$pageNumber);
+						if(!MPMU::access($sender, "gb.cmd.query.list")) return true;
+						$pageNumber = $this->getPageNumber($args);
+						return $this->cmdListAll($sender, $pageNumber);
 					case "summary":
-					  return $this->cmdSummary($sender);
+						return $this->cmdSummary($sender);
 				}
 		}
 		return false;
 	}
-	private function cmdQuery(CommandSender $c,$q,$args,$pageNumber = -1) {
-		if ($pageNumber == -1) $pageNumber = $this->getPageNumber($args);
-		if (count($args) != 1) {
-			$c->sendMessage(TextFormat::RED.mc::_("Usage: %1% <id>",$q));
+
+	private function cmdQuery(CommandSender $c, $q, $args, $pageNumber = -1){
+		if($pageNumber == -1) $pageNumber = $this->getPageNumber($args);
+		if(count($args) != 1){
+			$c->sendMessage(TextFormat::RED . mc::_("Usage: %1% <id>", $q));
 			return false;
 		}
 		$id = array_shift($args);
-		if (($dat = $this->owner->getModule("ServerList")->getServer($id)) === null) {
-			$c->sendMessage(TextFormat::RED.mc::_("%1% does not exist",$id));
+		if(($dat = $this->owner->getModule("ServerList")->getServer($id)) === null){
+			$c->sendMessage(TextFormat::RED . mc::_("%1% does not exist", $id));
 			return false;
 		}
 		$host = $dat["host"];
 		$port = $dat["port"];
 
-		$Query = new MinecraftQuery( );
-		try {
-			$Query->Connect( $host, $port, 1 );
-		} catch (MinecraftQueryException $e) {
-			$c->sendMessage(TextFormat::RED.mc::_("Query %1% failed: %2%",$host,$e->getMessage()));
+		$Query = new MinecraftQuery();
+		try{
+			$Query->Connect($host, $port, 1);
+		}catch(MinecraftQueryException $e){
+			$c->sendMessage(TextFormat::RED . mc::_("Query %1% failed: %2%", $host, $e->getMessage()));
 			return true;
 		}
-		$txt = [ mc::_("[%3%] query for %1%:%2%", $host,$port,$q) ];
-		switch ($q) {
+		$txt = [mc::_("[%3%] query for %1%:%2%", $host, $port, $q)];
+		switch($q){
 			case "info":
-			  if (($info = $Query->GetInfo()) === false) {
-					$c->sendMessage(TextFormat::RED.mc::_("Query of %1%:%2% returned no data", $host,$port));
+				if(($info = $Query->GetInfo()) === false){
+					$c->sendMessage(TextFormat::RED . mc::_("Query of %1%:%2% returned no data", $host, $port));
 					return true;
 				}
-				foreach ($info as $i=>$j) {
-					if ($i == "RawPlugins") continue;
-					if (is_array($j)) continue;
-					$txt[] =  TextFormat::GREEN. $i.": ".TextFormat::WHITE.$j;
+				foreach($info as $i => $j){
+					if($i == "RawPlugins") continue;
+					if(is_array($j)) continue;
+					$txt[] = TextFormat::GREEN . $i . ": " . TextFormat::WHITE . $j;
 				}
 				break;
 			case "plugins":
-				if (($info = $Query->GetInfo()) === false) {
-					$c->sendMessage(TextFormat::RED.mc::_("Query of %1%:%2% returned no data", $host,$port));
+				if(($info = $Query->GetInfo()) === false){
+					$c->sendMessage(TextFormat::RED . mc::_("Query of %1%:%2% returned no data", $host, $port));
 					return true;
 				}
-				if (!isset($info["Plugins"])) {
-					$c->sendMessage(TextFormat::RED.mc::_("%1%:%2%: No plugins", $host,$port));
+				if(!isset($info["Plugins"])){
+					$c->sendMessage(TextFormat::RED . mc::_("%1%:%2%: No plugins", $host, $port));
 					return true;
 				}
 				$cols = 8;
 				$i = 0;
-				foreach ($info["Plugins"] as $n) {
-					if (($i++ % $cols) == 0) {
+				foreach($info["Plugins"] as $n){
+					if(($i++ % $cols) == 0){
 						$txt[] = $n;
-					} else {
-						$txt[count($txt)-1] .= ", ".$n;
+					}else{
+						$txt[count($txt) - 1] .= ", " . $n;
 					}
 				}
 				break;
 			case "players":
-				if (($players = $Query->GetPlayers()) === false) {
-					$c->sendMessage(TextFormat::RED.mc::_("Query of %1%:%2% returned no data", $host,$port));
+				if(($players = $Query->GetPlayers()) === false){
+					$c->sendMessage(TextFormat::RED . mc::_("Query of %1%:%2% returned no data", $host, $port));
 					return true;
 				}
-				if (count($players) == 0) {
-					$c->sendMessage(TextFormat::RED.mc::_("%1%:%2%: No players", $host,$port));
+				if(count($players) == 0){
+					$c->sendMessage(TextFormat::RED . mc::_("%1%:%2%: No players", $host, $port));
 					return true;
 				}
 				$cols = 8;
 				$i = 0;
-				foreach ($players as $n) {
-					if (($i++ % $cols) == 0) {
+				foreach($players as $n){
+					if(($i++ % $cols) == 0){
 						$txt[] = $n;
-					} else {
-						$txt[count($txt)-1] .= ", ".$n;
+					}else{
+						$txt[count($txt) - 1] .= ", " . $n;
 					}
 				}
 				break;
 			default:
-			  return false;
+				return false;
 		}
-		return $this->paginateText($c,$pageNumber,$txt);
+		return $this->paginateText($c, $pageNumber, $txt);
 	}
-	private function cmdPlayers(CommandSender $c, $pageNumber) {
+
+	private function cmdPlayers(CommandSender $c, $pageNumber){
 		$all = [];
-		foreach ($this->owner->getServer()->getOnlinePlayers() as $p) {
+		foreach($this->owner->getServer()->getOnlinePlayers() as $p){
 			$all[$p->getName()] = mc::_("*current-server*");
 		}
-		foreach ($this->owner->getModule("ServerList")->getIds() as $id) {
+		foreach($this->owner->getModule("ServerList")->getIds() as $id){
 			$dat = $this->owner->getModule("ServerList")->getServer($id);
 			$host = $dat["host"];
 			$port = $dat["port"];
 
-			$Query = new MinecraftQuery( );
-			try {
-				$Query->Connect( $host, $port, 1 );
-			} catch (MinecraftQueryException $e) {
-				$this->owner->getLogger()->warning(mc::_("Query %1% failed: %2%",$host,$e->getMessage()));
+			$Query = new MinecraftQuery();
+			try{
+				$Query->Connect($host, $port, 1);
+			}catch(MinecraftQueryException $e){
+				$this->owner->getLogger()->warning(mc::_("Query %1% failed: %2%", $host, $e->getMessage()));
 				continue;
 			}
-			if (($players = $Query->GetPlayers()) === false) continue;
-			if (count($players) == 0) continue;
-			foreach ($players as $p) {
-				if ($c->hasPermission("gb.cmd.query.players.showip")) {
+			if(($players = $Query->GetPlayers()) === false) continue;
+			if(count($players) == 0) continue;
+			foreach($players as $p){
+				if($c->hasPermission("gb.cmd.query.players.showip")){
 					$all[$p] = "$id ($host:$port)";
-				} else {
+				}else{
 					$all[$p] = "$id";
 				}
 			}
 		}
-		if (count($all) == 0) {
-			$c->sendMessage(TextFormat::YELLOW."Nobody is on-line at the moment");
+		if(count($all) == 0){
+			$c->sendMessage(TextFormat::YELLOW . "Nobody is on-line at the moment");
 		}
-		$txt = [ mc::n(mc::_("One player found"),
-										mc::_("%1% players found",count($all)),
-										count($all)) ];
+		$txt = [mc::n(mc::_("One player found"),
+			mc::_("%1% players found", count($all)),
+			count($all))];
 		ksort($all, SORT_NATURAL);
-		foreach ($all as $i=>$j) {
-			$txt[] = $i." @ ".$j;
+		foreach($all as $i => $j){
+			$txt[] = $i . " @ " . $j;
 		}
-		return $this->paginateText($c,$pageNumber,$txt);
+		return $this->paginateText($c, $pageNumber, $txt);
 	}
-	private function cmdListAll(CommandSender $c, $pageNumber) {
+
+	private function cmdListAll(CommandSender $c, $pageNumber){
 		$all = [];
 
 		$dat = [
@@ -201,29 +205,29 @@ class CmdQuery extends BasicCli implements CommandExecutor {
 			"MaxPlayers" => $this->owner->getServer()->getMaxPlayers(),
 			"List" => [],
 		];
-		foreach ($this->owner->getServer()->getOnlinePlayers() as $p) {
+		foreach($this->owner->getServer()->getOnlinePlayers() as $p){
 			$dat["List"][] = $p->getName();
 		}
 		$totals = [
-			"Players"=>$dat["Players"],
-			"MaxPlayers"=>$dat["MaxPlayers"],
+			"Players" => $dat["Players"],
+			"MaxPlayers" => $dat["MaxPlayers"],
 		];
 		$all[mc::_("**this-server**")] = $dat;
-		foreach ($this->owner->getModule("ServerList")->getIds() as $id) {
+		foreach($this->owner->getModule("ServerList")->getIds() as $id){
 			$dat = $this->owner->getModule("ServerList")->getServer($id);
 			$host = $dat["host"];
 			$port = $dat["port"];
 
-			$Query = new MinecraftQuery( );
-			try {
-				$Query->Connect( $host, $port, 1 );
-			} catch (MinecraftQueryException $e) {
-				$this->owner->getLogger()->warning(mc::_("Query %1% failed: %2%",$host,$e->getMessage()));
+			$Query = new MinecraftQuery();
+			try{
+				$Query->Connect($host, $port, 1);
+			}catch(MinecraftQueryException $e){
+				$this->owner->getLogger()->warning(mc::_("Query %1% failed: %2%", $host, $e->getMessage()));
 				continue;
 			}
-			if (($info = $Query->GetInfo()) === false) continue;
-			foreach (["Players","MaxPlayers"] as $i) {
-				if (isset($info[$i])) $totals[$i] += $info[$i];
+			if(($info = $Query->GetInfo()) === false) continue;
+			foreach(["Players", "MaxPlayers"] as $i){
+				if(isset($info[$i])) $totals[$i] += $info[$i];
 			}
 			$all[$id] = [
 				"Players" => $info["Players"],
@@ -231,57 +235,58 @@ class CmdQuery extends BasicCli implements CommandExecutor {
 				"List" => $Query->getPlayers(),
 			];
 		}
-		$txt = [ mc::_("Totals: %1%/%2%", $totals["Players"], $totals["MaxPlayers"]) ];
-		foreach ($all as $id=>$dat) {
-			$txt[] = TextFormat::YELLOW.mc::_("%1% (%2%/%3%):", $id, $dat["Players"], $dat["MaxPlayers"]);
-			if (!is_array($dat["List"])) continue;
+		$txt = [mc::_("Totals: %1%/%2%", $totals["Players"], $totals["MaxPlayers"])];
+		foreach($all as $id => $dat){
+			$txt[] = TextFormat::YELLOW . mc::_("%1% (%2%/%3%):", $id, $dat["Players"], $dat["MaxPlayers"]);
+			if(!is_array($dat["List"])) continue;
 
 			$cols = 8;
 			$i = 0;
-			foreach ($dat["List"] as $n) {
-				if (($i++ % $cols) == 0) {
+			foreach($dat["List"] as $n){
+				if(($i++ % $cols) == 0){
 					$txt[] = $n;
-				} else {
-					$txt[count($txt)-1] .= ", ".$n;
+				}else{
+					$txt[count($txt) - 1] .= ", " . $n;
 				}
 			}
 
 		}
 
-		return $this->paginateText($c,$pageNumber,$txt);
+		return $this->paginateText($c, $pageNumber, $txt);
 	}
-	private function cmdSummary(CommandSender $c) {
+
+	private function cmdSummary(CommandSender $c){
 		$all = [
 			"servers" => 1,
 			"on-line" => 1,
 			"Players" => count($this->owner->getServer()->getOnlinePlayers()),
 			"MaxPlayers" => $this->owner->getServer()->getMaxPlayers(),
 		];
-		foreach ($this->owner->getModule("ServerList")->getIds() as $id) {
+		foreach($this->owner->getModule("ServerList")->getIds() as $id){
 			$dat = $this->owner->getModule("ServerList")->getServer($id);
 			$host = $dat["host"];
 			$port = $dat["port"];
 
 			$all["servers"]++;
 
-			$Query = new MinecraftQuery( );
-			try {
-				$Query->Connect( $host, $port, 1 );
-			} catch (MinecraftQueryException $e) {
-				$this->owner->getLogger()->warning(mc::_("Query %1% failed: %2%",$host,$e->getMessage()));
+			$Query = new MinecraftQuery();
+			try{
+				$Query->Connect($host, $port, 1);
+			}catch(MinecraftQueryException $e){
+				$this->owner->getLogger()->warning(mc::_("Query %1% failed: %2%", $host, $e->getMessage()));
 				continue;
 			}
-			if (($info = $Query->GetInfo()) === false) continue;
+			if(($info = $Query->GetInfo()) === false) continue;
 			$all["on-line"]++;
-			foreach (["Players","MaxPlayers"] as $i) {
-				if (isset($info[$i])) $all[$i] += $info[$i];
+			foreach(["Players", "MaxPlayers"] as $i){
+				if(isset($info[$i])) $all[$i] += $info[$i];
 			}
 		}
-		$c->sendMessage(TextFormat::BLUE.mc::_("Network Status"));
-		$c->sendMessage(TextFormat::GREEN.mc::_("Servers:%3% %1%/%2%",
-																						$all["on-line"],$all["servers"],TextFormat::YELLOW));
-		$c->sendMessage(TextFormat::GREEN.mc::_("Players:%3% %1%/%2%",
-																						$all["Players"],$all["MaxPlayers"],TextFormat::YELLOW));
+		$c->sendMessage(TextFormat::BLUE . mc::_("Network Status"));
+		$c->sendMessage(TextFormat::GREEN . mc::_("Servers:%3% %1%/%2%",
+				$all["on-line"], $all["servers"], TextFormat::YELLOW));
+		$c->sendMessage(TextFormat::GREEN . mc::_("Players:%3% %1%/%2%",
+				$all["Players"], $all["MaxPlayers"], TextFormat::YELLOW));
 		return true;
 	}
 }

@@ -26,8 +26,8 @@ use aliuly\grabbag\common\InvUtils;
 
 use pocketmine\item\Item;
 
-class CmdClearInv extends BasicCli implements CommandExecutor {
-	public function __construct($owner) {
+class CmdClearInv extends BasicCli implements CommandExecutor{
+	public function __construct($owner){
 		parent::__construct($owner);
 
 		PermUtils::add($this->owner, "gb.cmd.clearinv", "clear player's inventory", "true");
@@ -38,93 +38,95 @@ class CmdClearInv extends BasicCli implements CommandExecutor {
 		PermUtils::add($this->owner, "gb.cmd.clearhotbar.others", "clear other's hotbar", "op");
 
 		$this->enableCmd("clearinv",
-							  ["description" => mc::_("Clear player's inventory"),
-								"usage" => mc::_("/clearinv [player]"),
-								"permission" => "gb.cmd.clearinv"]);
+			["description" => mc::_("Clear player's inventory"),
+				"usage" => mc::_("/clearinv [player]"),
+				"permission" => "gb.cmd.clearinv"]);
 		$this->enableCmd("clearhotbar",
-							  ["description" => mc::_("Clear player's hotbar"),
-								"usage" => mc::_("/clearhotbar [player]"),
-								"aliases" => ["chb"],
-								"permission" => "gb.cmd.clearhotbar"]);
+			["description" => mc::_("Clear player's hotbar"),
+				"usage" => mc::_("/clearhotbar [player]"),
+				"aliases" => ["chb"],
+				"permission" => "gb.cmd.clearhotbar"]);
 		$this->enableCmd("rminv",
-										  ["description" => mc::_("Remove item from player's inventory"),
-											"usage" => mc::_("/rminv [player] <item> [quantity]"),
-											"permission" => "gb.cmd.rminv"]);
+			["description" => mc::_("Remove item from player's inventory"),
+				"usage" => mc::_("/rminv [player] <item> [quantity]"),
+				"permission" => "gb.cmd.rminv"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
-		if ($cmd->getName() == "rminv") return $this->rmInvItem($sender,$args);
-		if (count($args) > 1) return false;
-		if (count($args) == 0) {
-			if (!MPMU::inGame($sender)) return true;
+
+	public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool{
+		if($cmd->getName() == "rminv") return $this->rmInvItem($sender, $args);
+		if(count($args) > 1) return false;
+		if(count($args) == 0){
+			if(!MPMU::inGame($sender)) return true;
 			$target = $sender;
 			$other = false;
-		} else {
-			if (!MPMU::access($sender,"gb.cmd.".$cmd->getName().".others")) return true;
+		}else{
+			if(!MPMU::access($sender, "gb.cmd." . $cmd->getName() . ".others")) return true;
 			$target = $this->owner->getServer()->getPlayer($args[0]);
-			if ($target === null) {
-				$sender->sendMessage(mc::_("%1% can not be found.",$args[0]));
+			if($target === null){
+				$sender->sendMessage(mc::_("%1% can not be found.", $args[0]));
 				return true;
 			}
 			$other = true;
 		}
-		switch ($cmd->getName()) {
+		switch($cmd->getName()){
 			case "clearinv":
 				InvUtils::clearInventory($target);
-				if ($other) $target->sendMessage(mc::_("Your inventory has been cleared by %1%", $sender->getName()));
-				$sender->sendMessage(mc::_("%1%'s inventory cleared",$target->getName()));
+				if($other) $target->sendMessage(mc::_("Your inventory has been cleared by %1%", $sender->getName()));
+				$sender->sendMessage(mc::_("%1%'s inventory cleared", $target->getName()));
 				return true;
 			case "clearhotbar":
 				InvUtils::clearHotbar($target);
-				if ($other) $target->sendMessage(mc::_("Your hotbar has been cleared by %1%", $sender->getName()));
-				$sender->sendMessage(mc::_("%1%'s hotbar cleared",$target->getName()));
+				if($other) $target->sendMessage(mc::_("Your hotbar has been cleared by %1%", $sender->getName()));
+				$sender->sendMessage(mc::_("%1%'s hotbar cleared", $target->getName()));
 				return true;
 		}
 		return false;
 	}
-	private function rmInvItem(CommandSender $sender, array $args) {
-		if (count($args) == 0) return false;
-		if (($target = $this->owner->getServer()->getPlayer($args[0])) === null) {
-			if (!MPMU::inGame($sender)) return true;
+
+	private function rmInvItem(CommandSender $sender, array $args){
+		if(count($args) == 0) return false;
+		if(($target = $this->owner->getServer()->getPlayer($args[0])) === null){
+			if(!MPMU::inGame($sender)) return true;
 			$target = $sender;
 			$other = false;
-		} else {
-			if (!MPMU::access($sender,"gb.cmd.rminv.others")) return true;
+		}else{
+			if(!MPMU::access($sender, "gb.cmd.rminv.others")) return true;
 			array_shift($args);
-			$other= true;
+			$other = true;
 		}
-		if (count($args) == 0) return false;
-		if ($target->isCreative() || $target->isSpectator()) {
+		if(count($args) == 0) return false;
+		if($target->isCreative() || $target->isSpectator()){
 			$sender->sendMessage(mc::_("%1% is in %2% mode", $target->getDisplayName(),
-														MPMU::gamemodeStr($target->getGamemode())));
+				MPMU::gamemodeStr($target->getGamemode())));
 			return true;
 		}
 
 		$count = null;
-		if (count($args) > 1 && is_numeric($args[count($args)-1])) {
+		if(count($args) > 1 && is_numeric($args[count($args) - 1])){
 			$count = array_pop($args);
 		}
-		$args = strtolower(implode("_",$args));
-		if ($args == "hand") {
+		$args = strtolower(implode("_", $args));
+		if($args == "hand"){
 			$item = clone $target->getInventory()->getItemInHand();
-			if ($item->getId() == 0) {
+			if($item->getId() == 0){
 				$sender->sendMessage(mc::_("Must be holding something"));
 				return true;
 			}
-		} else {
+		}else{
 			$item = Item::fromString($args);
-			if ($item->getId() == 0) {
-				$sender->sendMessage(mc::_("There is no item called %1%",$args));
+			if($item->getId() == 0){
+				$sender->sendMessage(mc::_("There is no item called %1%", $args));
 				return true;
 			}
 		}
-		$k = InvUtils::rmInvItem($target,$item,$count);
-		if ($k) {
-			$sender->sendMessage(mc::n(mc::_("one item of %1% removed",ItemName::str($item)),
-						 mc::_("%2% items of %1% removed",ItemName::str($item),$k),$k));
-			if ($other)
-				$target->sendMessage(mc::n(mc::_("%2% took one item of %1% from you",ItemName::str($item),$sender->getName()),
-																 	 mc::_("%3% took %2% items of %1% from you",ItemName::str($item),$k,$sender->getName()),$k));
-		} else {
+		$k = InvUtils::rmInvItem($target, $item, $count);
+		if($k){
+			$sender->sendMessage(mc::n(mc::_("one item of %1% removed", ItemName::str($item)),
+				mc::_("%2% items of %1% removed", ItemName::str($item), $k), $k));
+			if($other)
+				$target->sendMessage(mc::n(mc::_("%2% took one item of %1% from you", ItemName::str($item), $sender->getName()),
+					mc::_("%3% took %2% items of %1% from you", ItemName::str($item), $k, $sender->getName()), $k));
+		}else{
 			$sender->sendMessage(mc::_("No items were removed!"));
 		}
 		return true;

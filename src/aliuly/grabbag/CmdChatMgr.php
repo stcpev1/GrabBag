@@ -29,10 +29,10 @@ use aliuly\grabbag\common\mc;
 use aliuly\grabbag\common\MPMU;
 use aliuly\grabbag\common\PermUtils;
 
-class CmdChatMgr extends BasicCli implements Listener,CommandExecutor {
+class CmdChatMgr extends BasicCli implements Listener, CommandExecutor{
 	protected $chat;
 
-	public function __construct($owner) {
+	public function __construct($owner){
 		parent::__construct($owner);
 		$this->chat = true;
 
@@ -44,127 +44,131 @@ class CmdChatMgr extends BasicCli implements Listener,CommandExecutor {
 		PermUtils::add($this->owner, "gb.cmd.nick", "Change display name", "true");
 
 		$this->enableCmd("clearchat",
-										["description" => mc::_("clears your chat window"),
-										"usage" => mc::_("/clearchat"),
-										"permission" => "gb.cmd.clearchat"]);
+			["description" => mc::_("clears your chat window"),
+				"usage" => mc::_("/clearchat"),
+				"permission" => "gb.cmd.clearchat"]);
 		$this->enableCmd("chat-on",
-										["description" => mc::_("starts chat"),
-										"usage" => mc::_("/chat-on [player|-l|-g]"),
-										"permission" => "gb.cmd.togglechat"]);
+			["description" => mc::_("starts chat"),
+				"usage" => mc::_("/chat-on [player|-l|-g]"),
+				"permission" => "gb.cmd.togglechat"]);
 		$this->enableCmd("chat-off",
-										["description" => mc::_("stops chat"),
-										"usage" => mc::_("/chat-off [player|-l|-g]"),
-										"permission" => "gb.cmd.togglechat"]);
+			["description" => mc::_("stops chat"),
+				"usage" => mc::_("/chat-off [player|-l|-g]"),
+				"permission" => "gb.cmd.togglechat"]);
 		$this->enableCmd("nick",
-										["description" => mc::_("change displayed name"),
-										"usage" => mc::_("/nick <new-name>"),
-										"permission" => "gb.cmd.nick"]);
+			["description" => mc::_("change displayed name"),
+				"usage" => mc::_("/nick <new-name>"),
+				"permission" => "gb.cmd.nick"]);
 
 		$this->owner->getServer()->getPluginManager()->registerEvents($this, $this->owner);
 	}
 
-	public function setGlobalChat($mode) {
+	public function setGlobalChat($mode){
 		$this->chat = $mode;
 	}
-	public function getGlobalChat() {
+
+	public function getGlobalChat(){
 		return $this->chat;
 	}
-	public function setPlayerChat($player,$mode) {
-		$this->setState($player,!$mode);
+
+	public function setPlayerChat($player, $mode){
+		$this->setState($player, !$mode);
 	}
-	public function getPlayerChat($player) {
-		return !$this->getState($to,false);
+
+	public function getPlayerChat($player){
+		return !$this->getState($to, false);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
-		switch ($cmd->getName()) {
+
+	public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool{
+		switch($cmd->getName()){
 			case "nick":
-				if (!MPMU::inGame($sender)) return true;
-				if (count($args) == 0) {
-					$sender->sendMessage(mc::_("Current nick is: %1%",$sender->getDisplayName()));
+				if(!MPMU::inGame($sender)) return true;
+				if(count($args) == 0){
+					$sender->sendMessage(mc::_("Current nick is: %1%", $sender->getDisplayName()));
 					return true;
 				}
-				if (count($args) !== 1)  return false;
-				$this->owner->getServer(mc::_("%1% is now known as %2%",$sender->getDisplayName(),$args[0]));
+				if(count($args) !== 1) return false;
+				$this->owner->getServer(mc::_("%1% is now known as %2%", $sender->getDisplayName(), $args[0]));
 				$sender->setDisplayName($args[0]);
 				return true;
 			case "clearchat":
-		  	if (!MPMU::inGame($sender)) return true;
-				if (count($args) != 0) return false;
-				for($i=0;$i<32;++$i) $sender->sendMessage(" ");
+				if(!MPMU::inGame($sender)) return true;
+				if(count($args) != 0) return false;
+				for($i = 0; $i < 32; ++$i) $sender->sendMessage(" ");
 				return true;
 			case "chat-on":
 			case "chat-off":
-		  	if (count($args) > 0) {
-		 			switch ($n = strtolower(array_shift($args))) {
+				if(count($args) > 0){
+					switch($n = strtolower(array_shift($args))){
 						case "--list":
 						case "--ls":
 						case "-l":
-						  if (!MPMU::access($sender,"gb.cmd.togglechat.others")) return true;
+							if(!MPMU::access($sender, "gb.cmd.togglechat.others")) return true;
 							$pageNumber = $this->getPageNumber($args);
-							$txt = [ "" ];
+							$txt = [""];
 							$cols = 8;
 							$i = 0;
-							foreach ($this->owner->getServer()->getOnlinePlayers() as $p) {
-								if (!$this->getState($p,false)) continue;
+							foreach($this->owner->getServer()->getOnlinePlayers() as $p){
+								if(!$this->getState($p, false)) continue;
 								$n = $p->getDisplayName();
-								if (($i++ % $cols) == 0) {
+								if(($i++ % $cols) == 0){
 									$txt[] = $n;
-								} else {
-									$txt[count($txt)-1] .= ", ".$n;
+								}else{
+									$txt[count($txt) - 1] .= ", " . $n;
 								}
 							}
-							if ($i == 0) {
+							if($i == 0){
 								$sender->sendMessage(mc::_("No players with chat off"));
-								if (!$this->chat) $sender->sendMessage(mc::_("Chat is GLOBALLY off"));
+								if(!$this->chat) $sender->sendMessage(mc::_("Chat is GLOBALLY off"));
 								return true;
 							}
-							if ($this->chat) {
+							if($this->chat){
 								$txt[0] = mc::n(mc::_("One player with chat off"),
-																mc::_("%1% players with chat off",$i),
-																$i);
-							} else {
+									mc::_("%1% players with chat off", $i),
+									$i);
+							}else{
 								$txt[0] = mc::_("Chat is GLOBALLY off");
 							}
-							return $this->paginateText($sender,$pageNumber,$txt);
+							return $this->paginateText($sender, $pageNumber, $txt);
 						case "--server":
 						case "--global":
 						case "-g":
-							if (count($args)) return false;
-							if (!MPMU::access($sender,"gb.cmd.togglechat.global")) return true;
-							if ($cmd->getName() == "chat-off") {
+							if(count($args)) return false;
+							if(!MPMU::access($sender, "gb.cmd.togglechat.global")) return true;
+							if($cmd->getName() == "chat-off"){
 								$this->setGlobalChat(false);
 								$this->owner->getServer()->broadcastMessage(mc::_("Chat disabled globally from %1%", $sender->getName()));
-							} else {
+							}else{
 								$this->setGlobalChat(true);
 								$this->owner->getServer()->broadcastMessage(mc::_("Chat enabled globally from %1%", $sender->getName()));
 							}
 							return true;
 						default:
-							if (count($args)) return false;
-							if (!MPMU::access($sender,"gb.cmd.togglechat.others")) return true;
+							if(count($args)) return false;
+							if(!MPMU::access($sender, "gb.cmd.togglechat.others")) return true;
 							$player = $this->owner->getServer()->getPlayer($n);
-							if ($player === null) {
-								$sender->sendMessage(mc::_("Unable to find %1%",$n));
+							if($player === null){
+								$sender->sendMessage(mc::_("Unable to find %1%", $n));
 								return true;
 							}
-							if ($cmd->getName() == "chat-off") {
+							if($cmd->getName() == "chat-off"){
 								$this->setState($player, true);
-								$player->sendMessage(mc::_("Chat disabled from %1%",$sender->getName()));
-								$sender->sendMessage(mc::_("Chat disabled for %1%",$player->getDisplayName()));
-							} else {
+								$player->sendMessage(mc::_("Chat disabled from %1%", $sender->getName()));
+								$sender->sendMessage(mc::_("Chat disabled for %1%", $player->getDisplayName()));
+							}else{
 								$this->unsetState($player);
-								$player->sendMessage(mc::_("Chat enabled from %1%",$sender->getName()));
-								$sender->sendMessage(mc::_("Chat enabled for %1%",$player->getDisplayName()));
+								$player->sendMessage(mc::_("Chat enabled from %1%", $sender->getName()));
+								$sender->sendMessage(mc::_("Chat enabled for %1%", $player->getDisplayName()));
 							}
 							return true;
-						}
-						return false;
+					}
+					return false;
 				}
-				if (!MPMU::inGame($sender)) return true;
-				if ($cmd->getName() == "chat-off") {
-					$this->setState($sender,true);
+				if(!MPMU::inGame($sender)) return true;
+				if($cmd->getName() == "chat-off"){
+					$this->setState($sender, true);
 					$sender->sendMessage(mc::_("Chat disabled"));
-				} else {
+				}else{
 					$this->unsetState($sender);
 					$sender->sendMessage(mc::_("Chat enabled"));
 				}
@@ -173,23 +177,23 @@ class CmdChatMgr extends BasicCli implements Listener,CommandExecutor {
 		return false;
 	}
 
-	public function onChat(PlayerChatEvent $ev) {
-		if ($ev->isCancelled()) return;
+	public function onChat(PlayerChatEvent $ev){
+		if($ev->isCancelled()) return;
 		$p = $ev->getPlayer();
-		if ($p->hasPermission("gb.cmd.togglechat.excempt")) return; // Can always chat!
-		if (!$this->chat) {
+		if($p->hasPermission("gb.cmd.togglechat.excempt")) return; // Can always chat!
+		if(!$this->chat){
 			$p->sendMessage(mc::_("Chat has been globally disabled!"));
 			$ev->setCancelled();
 			return;
 		}
-		if ($this->getState($p,false)) {
+		if($this->getState($p, false)){
 			$p->sendMessage(mc::_("You have chat disabled!  Use /chat-on"));
 			$ev->setCancelled();
 			return;
 		}
 		$recvr = [];
-		foreach ($ev->getRecipients() as $to) {
-			if ($this->getState($to,false)) continue;
+		foreach($ev->getRecipients() as $to){
+			if($this->getState($to, false)) continue;
 			$recvr[] = $to;
 		}
 		$ev->setRecipients($recvr);

@@ -8,28 +8,31 @@ use pocketmine\event\Cancellable;
 /**
  * Triggered when a new server is being removed from the server list
  */
-class GbRemoveServerEvent extends GrabBagEvent implements Cancellable {
-  public static $handlerList = null;
-  private $serverId;
-  /**
-   * @param GrabBagPlugin $plugin - plugin owner
-   */
-   public function __construct(GrabBagPlugin $plugin,$id) {
-     parent::__construct($plugin);
-     $this->serverId = $id;
-   }
-  /**
-   * Returns the server id
-   * @return string
-   */
-  public function getId() {
-     return $this->serverId;
-  }
-  /**
-   * Sets the server id
-   * @param string $id
-   */
-  public function setId($id) {
-     $this->serverId = $id;
-  }
+class GbRemoveServerEvent extends GrabBagEvent implements Cancellable{
+	public static $handlerList = null;
+	private $serverId;
+
+	/**
+	 * @param GrabBagPlugin $plugin - plugin owner
+	 */
+	public function __construct(GrabBagPlugin $plugin, $id){
+		parent::__construct($plugin);
+		$this->serverId = $id;
+	}
+
+	/**
+	 * Returns the server id
+	 * @return string
+	 */
+	public function getId(){
+		return $this->serverId;
+	}
+
+	/**
+	 * Sets the server id
+	 * @param string $id
+	 */
+	public function setId($id){
+		$this->serverId = $id;
+	}
 }

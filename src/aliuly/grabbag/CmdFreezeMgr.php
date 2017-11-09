@@ -23,117 +23,122 @@ use aliuly\grabbag\common\mc;
 use aliuly\grabbag\common\MPMU;
 use aliuly\grabbag\common\PermUtils;
 
-class CmdFreezeMgr extends BasicCli implements Listener,CommandExecutor {
+class CmdFreezeMgr extends BasicCli implements Listener, CommandExecutor{
 	protected $frosties;
 	protected $hard;
 
 	//= cfg:freeze-thaw
-	static public function defaults() {
+	static public function defaults(){
 		return [
 			"# hard-freeze" => "how hard to freeze players.", // If **true** no movement is allowed.  If **false**, turning is allowed but not walking/running/flying, etc.
-			"hard-freeze"=>false,
+			"hard-freeze" => false,
 		];
 	}
 
-	public function isHardFreeze() {
+	public function isHardFreeze(){
 		return $this->hard;
-  }
-  public function setHardFreeze($hard) {
-		$this->hard = $hard ? true : false;
-		$this->owner->cfgSave("freeze-thaw",["hard-freeze"=>$this->hard]);
-  }
-  public function freeze($player, $freeze) {
-		$n = strtolower($player->getName());
-		if ($freeze) {
-			$this->frosties[$n] = $player->getName();
-		} else {
-			if (isset($this->frosties[$n])) unset($this->frosties[$n]);
-		}
-  }
-  public function getFrosties() {
-    return array_keys($this->frosties);
-  }
+	}
 
-	public function __construct($owner,$cfg) {
+	public function setHardFreeze($hard){
+		$this->hard = $hard ? true : false;
+		$this->owner->cfgSave("freeze-thaw", ["hard-freeze" => $this->hard]);
+	}
+
+	public function freeze($player, $freeze){
+		$n = strtolower($player->getName());
+		if($freeze){
+			$this->frosties[$n] = $player->getName();
+		}else{
+			if(isset($this->frosties[$n])) unset($this->frosties[$n]);
+		}
+	}
+
+	public function getFrosties(){
+		return array_keys($this->frosties);
+	}
+
+	public function __construct($owner, $cfg){
 		parent::__construct($owner);
 		$this->hard = $cfg["hard-freeze"];
 		PermUtils::add($this->owner, "gb.cmd.freeze", "freeze/thaw players", "op");
 		$this->enableCmd("freeze",
-							  ["description" => mc::_("freeze player"),
-								"usage" => mc::_("/freeze [--hard|--soft] [player]"),
-								"permission" => "gb.cmd.freeze"]);
+			["description" => mc::_("freeze player"),
+				"usage" => mc::_("/freeze [--hard|--soft] [player]"),
+				"permission" => "gb.cmd.freeze"]);
 		$this->enableCmd("thaw",
-							  ["description" => mc::_("thaw player"),
-								"usage" => mc::_("/thaw [player]"),
-								"aliases" => ["unfreeze"],
-								"permission" => "gb.cmd.freeze"]);
+			["description" => mc::_("thaw player"),
+				"usage" => mc::_("/thaw [player]"),
+				"aliases" => ["unfreeze"],
+				"permission" => "gb.cmd.freeze"]);
 		$this->frosties = [];
 		$this->owner->getServer()->getPluginManager()->registerEvents($this, $this->owner);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
-		if (count($args) == 0) {
-			$sender->sendMessage(mc::_("Frozen: %1%",count($this->frosties)));
-			if (count($this->frosties))
-				$sender->sendMessage(implode(", ",$this->frosties));
+
+	public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool{
+		if(count($args) == 0){
+			$sender->sendMessage(mc::_("Frozen: %1%", count($this->frosties)));
+			if(count($this->frosties))
+				$sender->sendMessage(implode(", ", $this->frosties));
 			return true;
 		}
-		switch ($cmd->getName()) {
+		switch($cmd->getName()){
 			case "freeze":
-				if ($args[0] == "--hard") {
+				if($args[0] == "--hard"){
 					$sender->sendMessage(mc::_("Now doing hard freeze"));
 					$this->setHardFreeze(true);
 					return true;
-				} elseif ($args[0] == "--soft") {
+				}elseif($args[0] == "--soft"){
 					$sender->sendMessage(mc::_("Now doing soft freeze"));
 					$this->setHardFreeze(false);
 					return true;
 				}
 
-				foreach ($args as $n) {
+				foreach($args as $n){
 					$player = $this->owner->getServer()->getPlayer($n);
-					if ($player) {
+					if($player){
 						$this->frosties[strtolower($player->getName())] = $player->getName();
 						$player->sendMessage(mc::_("You have been frozen by %1%",
-															$sender->getName()));
-						$sender->sendMessage(mc::_("%1% is frozen.",$n));
-					} else {
-						$sender->sendMessage(mc::_("%1% not found.",$n));
+							$sender->getName()));
+						$sender->sendMessage(mc::_("%1% is frozen.", $n));
+					}else{
+						$sender->sendMessage(mc::_("%1% not found.", $n));
 					}
 				}
 				return true;
 			case "thaw":
-				foreach ($args as $n) {
-					if (isset($this->frosties[strtolower($n)])) {
+				foreach($args as $n){
+					if(isset($this->frosties[strtolower($n)])){
 						unset($this->frosties[strtolower($n)]);
 						$player = $this->owner->getServer()->getPlayer($n);
-						if ($player) {
+						if($player){
 							$player->sendMessage(mc::_("You have been thawed by %1%",
-																$sender->getName()));
+								$sender->getName()));
 						}
-						$sender->sendMessage(mc::_("%1% is thawed",$n));
-					} else {
-						$sender->sendMessage(mc::_("%1% not found or not thawed",$n));
+						$sender->sendMessage(mc::_("%1% is thawed", $n));
+					}else{
+						$sender->sendMessage(mc::_("%1% not found or not thawed", $n));
 					}
 				}
 				return true;
 		}
 		return false;
 	}
-	public function onMove(PlayerMoveEvent $ev) {
-		if ($ev->isCancelled()) return;
+
+	public function onMove(PlayerMoveEvent $ev){
+		if($ev->isCancelled()) return;
 		$p = $ev->getPlayer();
-		if (isset($this->frosties[strtolower($p->getName())])) {
-			if ($this->hard) {
+		if(isset($this->frosties[strtolower($p->getName())])){
+			if($this->hard){
 				$ev->setCancelled();
-				if (MPMU::apiVersion("1.12.0"))
+				if(MPMU::apiVersion("1.12.0"))
 					$p->sendTip(mc::_("You are frozen"));
-			} else {
+			}else{
 				// Lock position but still allow to turn around
 				$to = clone $ev->getFrom();
 				$to->yaw = $ev->getTo()->yaw;
 				$to->pitch = $ev->getTo()->pitch;
 				$ev->setTo($to);
-				if (MPMU::apiVersion("1.12.0"))
+				if(MPMU::apiVersion("1.12.0"))
 					$p->sendTip(mc::_("You are frozen in place"));
 			}
 		}

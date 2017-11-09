@@ -19,85 +19,89 @@ use aliuly\grabbag\common\mc;
 use aliuly\grabbag\common\PermUtils;
 
 
-class CmdMuteMgr extends BasicCli implements Listener,CommandExecutor {
+class CmdMuteMgr extends BasicCli implements Listener, CommandExecutor{
 	protected $mutes;
 
-	public function __construct($owner) {
+	public function __construct($owner){
 		parent::__construct($owner);
 
 		PermUtils::add($this->owner, "gb.cmd.mute", "mute/unmute players", "op");
 
 		$this->enableCmd("mute",
-							  ["description" => mc::_("mute player"),
-								"usage" => mc::_("/mute [player]"),
-								"permission" => "gb.cmd.mute"]);
+			["description" => mc::_("mute player"),
+				"usage" => mc::_("/mute [player]"),
+				"permission" => "gb.cmd.mute"]);
 		$this->enableCmd("unmute",
-							  ["description" => mc::_("unmute player"),
-								"usage" => mc::_("/unmute [player]"),
-								"permission" => "gb.cmd.mute"]);
+			["description" => mc::_("unmute player"),
+				"usage" => mc::_("/unmute [player]"),
+				"permission" => "gb.cmd.mute"]);
 		$this->mutes = [];
 		$this->owner->getServer()->getPluginManager()->registerEvents($this, $this->owner);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
-		if (count($args) == 0) {
-			$sender->sendMessage(mc::_("Mutes: %1%",count($this->mutes)));
-			if (count($this->mutes))
-				$sender->sendMessage(implode(", ",$this->mutes));
+
+	public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool{
+		if(count($args) == 0){
+			$sender->sendMessage(mc::_("Mutes: %1%", count($this->mutes)));
+			if(count($this->mutes))
+				$sender->sendMessage(implode(", ", $this->mutes));
 			return true;
 		}
-		switch ($cmd->getName()) {
+		switch($cmd->getName()){
 			case "mute":
-				foreach ($args as $n) {
+				foreach($args as $n){
 					$player = $this->owner->getServer()->getPlayer($n);
-					if ($player) {
+					if($player){
 						$this->mutes[strtolower($player->getName())] = $player->getName();
 						$player->sendMessage(mc::_("You have been muted by %1%",
-															$sender->getName()));
-						$sender->sendMessage(mc::_("%1% is muted.",$n));
-					} else {
-						$sender->sendMessage(mc::_("%1% not found.",$n));
+							$sender->getName()));
+						$sender->sendMessage(mc::_("%1% is muted.", $n));
+					}else{
+						$sender->sendMessage(mc::_("%1% not found.", $n));
 					}
 				}
 				return true;
 			case "unmute":
-				foreach ($args as $n) {
-					if (isset($this->mutes[strtolower($n)])) {
+				foreach($args as $n){
+					if(isset($this->mutes[strtolower($n)])){
 						unset($this->mutes[strtolower($n)]);
 						$player = $this->owner->getServer()->getPlayer($n);
-						if ($player) {
+						if($player){
 							$player->sendMessage(mc::_("You have been unmuted by %1%",
-																$sender->getName()));
+								$sender->getName()));
 						}
-						$sender->sendMessage(mc::_("%1% is un-muted",$n));
-					} else {
-						$sender->sendMessage(mc::_("%1% not found or not muted",$n));
+						$sender->sendMessage(mc::_("%1% is un-muted", $n));
+					}else{
+						$sender->sendMessage(mc::_("%1% not found or not muted", $n));
 					}
 				}
 				return true;
 		}
 		return false;
 	}
-	public function getMutes() {
+
+	public function getMutes(){
 		return array_keys($this->mutes);
 	}
-	public function setMute($player,$mode) {
+
+	public function setMute($player, $mode){
 		$n = strtolower($player->getName());
-		if ($mode) {
-			if (isset($this->mutes[$n])) return;
+		if($mode){
+			if(isset($this->mutes[$n])) return;
 			$this->mutes[$n] = $player->getName();
-		} else  {
-			if (!isset($this->mutes[$n])) return;
+		}else{
+			if(!isset($this->mutes[$n])) return;
 			unset($this->mutes[$n]);
 		}
 	}
-	public function getMute($player) {
+
+	public function getMute($player){
 		return isset($this->mutes[strtolower($player->getName())]);
 	}
 
-	public function onChat(PlayerChatEvent $ev) {
-		if ($ev->isCancelled()) return;
+	public function onChat(PlayerChatEvent $ev){
+		if($ev->isCancelled()) return;
 		$p = $ev->getPlayer();
-		if (isset($this->mutes[strtolower($p->getName())])) {
+		if(isset($this->mutes[strtolower($p->getName())])){
 			$p->sendMessage(mc::_("You have been muted!"));
 			$ev->setCancelled();
 		}

@@ -30,69 +30,75 @@ use aliuly\grabbag\common\BasicCli;
 use aliuly\grabbag\common\mc;
 use aliuly\grabbag\common\PermUtils;
 
-class CmdPrefixMgr extends BasicCli implements CommandExecutor,Listener {
+class CmdPrefixMgr extends BasicCli implements CommandExecutor, Listener{
 	static $delay = 5;
-	public function __construct($owner) {
+
+	public function __construct($owner){
 		parent::__construct($owner);
 		PermUtils::add($this->owner, "gb.cmd.prefix", "Prefix command", "true");
 
 		$this->enableCmd("prefix",
-							  ["description" => mc::_("Execute commands with prefix inserted"),
-								"usage" => mc::_("/prefix [-n] <text>"),
-								"permission" => "gb.cmd.prefix"]);
+			["description" => mc::_("Execute commands with prefix inserted"),
+				"usage" => mc::_("/prefix [-n] <text>"),
+				"permission" => "gb.cmd.prefix"]);
 		$this->owner->getServer()->getPluginManager()->registerEvents($this, $this->owner);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
-		if ($cmd->getName() != "prefix") return false;
-		if (count($args) == 0 || (count($args) == 1 && $args[0] == "-n")) {
+
+	public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool{
+		if($cmd->getName() != "prefix") return false;
+		if(count($args) == 0 || (count($args) == 1 && $args[0] == "-n")){
 			$this->unsetState($sender);
 			$sender->sendMessage(mc::_("prefix turned off"));
 			return true;
 		}
 		$sep = " ";
-		if ($args[0] == "-n") {
+		if($args[0] == "-n"){
 			$sep = "";
 			array_shift($args);
 		}
-		$this->setState($sender,$n = implode(" ",$args).$sep);
-		$sender->sendMessage(mc::_("Prefix set to \"%1%\"",$n));
+		$this->setState($sender, $n = implode(" ", $args) . $sep);
+		$sender->sendMessage(mc::_("Prefix set to \"%1%\"", $n));
 		return true;
 	}
-	private function processCmd($msg,$sender) {
-		$prefix = $this->getState($sender,"");
-		if ($prefix == "") return false;
-		if ($msg{0} == "<") return false; // Just this command we do it without prefix!
-		if ($sender instanceof Player) {
-			if (preg_match('/^\s*\/prefix\s*/',$msg)) return false;
-		} else {
-			if (preg_match('/^\s*prefix\s*/',$msg)) return false;
+
+	private function processCmd($msg, $sender){
+		$prefix = $this->getState($sender, "");
+		if($prefix == "") return false;
+		if($msg{0} == "<") return false; // Just this command we do it without prefix!
+		if($sender instanceof Player){
+			if(preg_match('/^\s*\/prefix\s*/', $msg)) return false;
+		}else{
+			if(preg_match('/^\s*prefix\s*/', $msg)) return false;
 		}
-		if (!($sender instanceof Player)) $sender->sendMessage(">> $prefix$msg");
-		return $prefix.$msg;
+		if(!($sender instanceof Player)) $sender->sendMessage(">> $prefix$msg");
+		return $prefix . $msg;
 	}
+
 	/**
 	 * @priority LOW
 	 */
-	public function onPlayerCmd(PlayerCommandPreprocessEvent $ev) {
-		if ($ev->isCancelled()) return;
-		$res = $this->processCmd($ev->getMessage(),$ev->getPlayer());
-		if ($res === false) return;
+	public function onPlayerCmd(PlayerCommandPreprocessEvent $ev){
+		if($ev->isCancelled()) return;
+		$res = $this->processCmd($ev->getMessage(), $ev->getPlayer());
+		if($res === false) return;
 		$ev->setMessage($res);
 	}
+
 	/**
 	 * @priority LOW
 	 */
-	public function onRconCmd(RemoteServerCommandEvent $ev) {
-		$res = $this->processCmd($ev->getCommand(),$ev->getSender());
-		if ($res === false) return;
+	public function onRconCmd(RemoteServerCommandEvent $ev){
+		$res = $this->processCmd($ev->getCommand(), $ev->getSender());
+		if($res === false) return;
 		$ev->setCommand($res);
 	}
+
 	/**
 	 * @priority LOW
 	 */
-	public function onConsoleCmd(ServerCommandEvent $ev) {
-		$res = $this->processCmd($ev->getCommand(),$ev->getSender());
-		if ($res === false) return;
+	public function onConsoleCmd(ServerCommandEvent $ev){
+		$res = $this->processCmd($ev->getCommand(), $ev->getSender());
+		if($res === false) return;
 		$ev->setCommand($res);
 	}
 }

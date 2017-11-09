@@ -23,49 +23,54 @@ use aliuly\grabbag\common\PluginCallbackTask;
 use aliuly\grabbag\common\PermUtils;
 
 
-class CmdSrvModeMgr extends BasicCli implements CommandExecutor,Listener {
+class CmdSrvModeMgr extends BasicCli implements CommandExecutor, Listener{
 	protected $mode;
 	static $delay = 5;
-	public function __construct($owner) {
+
+	public function __construct($owner){
 		parent::__construct($owner);
 		PermUtils::add($this->owner, "gb.cmd.servicemode", "service mode command", "op");
 		PermUtils::add($this->owner, "gb.servicemode.allow", "login when in service mode", "op");
 
 		$this->enableCmd("servicemode",
-							  ["description" => mc::_("Enter/Exit servicemode"),
-								"usage" => mc::_("/servicemode [on|off [message]]"),
-								"aliases" => ["srvmode","srmode"],
-								"permission" => "gb.cmd.servicemode"]);
+			["description" => mc::_("Enter/Exit servicemode"),
+				"usage" => mc::_("/servicemode [on|off [message]]"),
+				"aliases" => ["srvmode", "srmode"],
+				"permission" => "gb.cmd.servicemode"]);
 		$this->owner->getServer()->getPluginManager()->registerEvents($this, $this->owner);
 		$this->mode = false;
 	}
-	public function getServiceMode() {
+
+	public function getServiceMode(){
 		return $this->mode;
 	}
-	public function setServiceMode($msg) {
+
+	public function setServiceMode($msg){
 		$this->mode = $msg;
 	}
-	public function unsetServiceMode() {
+
+	public function unsetServiceMode(){
 		$this->mode = false;
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
-		if ($cmd->getName() != "servicemode") return false;
-		if (count($args) == 0) {
-			if ($this->getServiceMode() !== false) {
-				$sender->sendMessage(TextFormat::RED.mc::_("In Service Mode: %1%",$this->getServiceMode()));
-			} else {
-				$sender->sendMessage(TextFormat::GREEN.mc::_("In Normal operating mode"));
+
+	public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool{
+		if($cmd->getName() != "servicemode") return false;
+		if(count($args) == 0){
+			if($this->getServiceMode() !== false){
+				$sender->sendMessage(TextFormat::RED . mc::_("In Service Mode: %1%", $this->getServiceMode()));
+			}else{
+				$sender->sendMessage(TextFormat::GREEN . mc::_("In Normal operating mode"));
 			}
 			return true;
 		}
-		if (in_array(strtolower(array_shift($args)),["on","up","true",1])) {
-			$msg = implode(" ",$args);
-			if (!$msg) $msg = mc::_("Scheduled maintenance");
-			$this->owner->getServer()->broadcastMessage(TextFormat::RED.mc::_("ATTENTION: Entering service mode"));
-			$this->owner->getServer()->broadcastMessage(TextFormat::YELLOW." - ".$msg);
+		if(in_array(strtolower(array_shift($args)), ["on", "up", "true", 1])){
+			$msg = implode(" ", $args);
+			if(!$msg) $msg = mc::_("Scheduled maintenance");
+			$this->owner->getServer()->broadcastMessage(TextFormat::RED . mc::_("ATTENTION: Entering service mode"));
+			$this->owner->getServer()->broadcastMessage(TextFormat::YELLOW . " - " . $msg);
 			$this->setServiceMode($msg);
-		} else {
-			$this->owner->getServer()->broadcastMessage(TextFormat::GREEN.mc::_("ATTENTION: Leaving service mode"));
+		}else{
+			$this->owner->getServer()->broadcastMessage(TextFormat::GREEN . mc::_("ATTENTION: Leaving service mode"));
 			$this->unsetServiceMode();
 		}
 		return true;
@@ -73,27 +78,29 @@ class CmdSrvModeMgr extends BasicCli implements CommandExecutor,Listener {
 	//
 	// Event handlers...
 	//
-	public function onPlayerJoin(PlayerJoinEvent $e) {
+	public function onPlayerJoin(PlayerJoinEvent $e){
 		$pl = $e->getPlayer();
-		if ($pl == null) return;
-		if ($this->mode === false) return;
-		if ($pl->hasPermission("gb.servicemode.allow")) {
-			$task =new PluginCallbackTask($this->owner,[$this,"announce"],[$pl->getName()]);
-		} else {
-			$task =new PluginCallbackTask($this->owner,[$this,"kickuser"],[$pl->getName()]);
+		if($pl == null) return;
+		if($this->mode === false) return;
+		if($pl->hasPermission("gb.servicemode.allow")){
+			$task = new PluginCallbackTask($this->owner, [$this, "announce"], [$pl->getName()]);
+		}else{
+			$task = new PluginCallbackTask($this->owner, [$this, "kickuser"], [$pl->getName()]);
 		}
-		$this->owner->getServer()->getScheduler()->scheduleDelayedTask($task,self::$delay);
+		$this->owner->getServer()->getScheduler()->scheduleDelayedTask($task, self::$delay);
 	}
-	public function announce($pn) {
+
+	public function announce($pn){
 		$player = $this->owner->getServer()->getPlayer($pn);
-		if (!($player instanceof Player)) return;
-		$player->sendMessage(TextFormat::RED.mc::_("NOTE: currently in service mode"));
-		$player->sendMessage(TextFormat::YELLOW."- ".$this->mode);
+		if(!($player instanceof Player)) return;
+		$player->sendMessage(TextFormat::RED . mc::_("NOTE: currently in service mode"));
+		$player->sendMessage(TextFormat::YELLOW . "- " . $this->mode);
 	}
-	public function kickuser($pn) {
+
+	public function kickuser($pn){
 		$player = $this->owner->getServer()->getPlayer($pn);
-		if (!($player instanceof Player)) return;
-		$this->owner->getServer()->broadcastMessage(TextFormat::RED.mc::_("%1% attempted to join",$pn));
+		if(!($player instanceof Player)) return;
+		$this->owner->getServer()->broadcastMessage(TextFormat::RED . mc::_("%1% attempted to join", $pn));
 		$player->kick($this->mode);
 	}
 }

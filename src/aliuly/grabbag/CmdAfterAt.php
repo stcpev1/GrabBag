@@ -40,131 +40,138 @@ use aliuly\grabbag\common\mc;
 use aliuly\grabbag\common\PluginCallbackTask;
 use aliuly\grabbag\common\PermUtils;
 
-class CmdAfterAt extends BasicCli implements CommandExecutor {
+class CmdAfterAt extends BasicCli implements CommandExecutor{
 	protected $tasks;
-	public function __construct($owner) {
+
+	public function __construct($owner){
 		parent::__construct($owner);
 		$this->tasks = [];
 
 		PermUtils::add($this->owner, "gb.cmd.after", "access command scheduler", "op");
 
 		$this->enableCmd("after",
-							  ["description" => mc::_("schedule to run a command after x seconds"),
-								"usage" => mc::_("/after <seconds> <command>|list|cancel <id>"),
-								"permission" => "gb.cmd.after"]);
+			["description" => mc::_("schedule to run a command after x seconds"),
+				"usage" => mc::_("/after <seconds> <command>|list|cancel <id>"),
+				"permission" => "gb.cmd.after"]);
 		$this->enableCmd("at",
-							  ["description" => mc::_("schedule to run a command at a certain time"),
-								"usage" => mc::_("/at <time> <command>|list|cancel <id>"),
-								"permission" => "gb.cmd.after"]);
+			["description" => mc::_("schedule to run a command at a certain time"),
+				"usage" => mc::_("/at <time> <command>|list|cancel <id>"),
+				"permission" => "gb.cmd.after"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
+
+	public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool{
 		// Collect expired tasks out of the tasks table...
-		foreach (array_keys($this->tasks) as $tid) {
-			if (!$this->owner->getServer()->getScheduler()->isQueued($tid)) {
+		foreach(array_keys($this->tasks) as $tid){
+			if(!$this->owner->getServer()->getScheduler()->isQueued($tid)){
 				unset($this->tasks[$tid]);
 			}
 		}
-		switch($cmd->getName()) {
+		switch($cmd->getName()){
 			case "after":
-			  if ($this->commonSubs($sender,$args)) return true;
-				return $this->cmdAfter($sender,$args);
+				if($this->commonSubs($sender, $args)) return true;
+				return $this->cmdAfter($sender, $args);
 			case "at":
-				if ($this->commonSubs($sender,$args)) return true;
-				return $this->cmdAt($sender,$args);
+				if($this->commonSubs($sender, $args)) return true;
+				return $this->cmdAt($sender, $args);
 		}
 		return false;
 	}
-	public function runCommand($cmd) {
-		$this->owner->getServer()->dispatchCommand(new ConsoleCommandSender(),$cmd);
+
+	public function runCommand($cmd){
+		$this->owner->getServer()->dispatchCommand(new ConsoleCommandSender(), $cmd);
 	}
-	private function commonSubs(CommandSender $c,$args){
-		if (count($args) == 0) return false;
-		switch (strtolower($args[0])){
+
+	private function commonSubs(CommandSender $c, $args){
+		if(count($args) == 0) return false;
+		switch(strtolower($args[0])){
 			case "list":
 			case "ls":
-				if (count($this->tasks) == 0) {
+				if(count($this->tasks) == 0){
 					$c->sendMessage(mc::_("No tasks currently scheduled"));
 					return true;
 				}
 				$pageNumber = $this->getPageNumber($args);
-				$tab = [ [	mc::_("Id"), mc::_("When"),
-										mc::n(mc::_("One scheduled task"),
-											 mc::_("%1% scheduled tasks",count($this->tasks)),
-											count($this->tasks)) ] ];
-				foreach ($this->tasks as $tid => $cmd) {
-					list($when,$line) = $cmd;
-					$tab[] = [ $tid, date(mc::_("d-M-Y H:i:s"),$when), $line ];
+				$tab = [[mc::_("Id"), mc::_("When"),
+					mc::n(mc::_("One scheduled task"),
+						mc::_("%1% scheduled tasks", count($this->tasks)),
+						count($this->tasks))]];
+				foreach($this->tasks as $tid => $cmd){
+					list($when, $line) = $cmd;
+					$tab[] = [$tid, date(mc::_("d-M-Y H:i:s"), $when), $line];
 				}
-				return $this->paginateTable($c,$pageNumber,$tab);
+				return $this->paginateTable($c, $pageNumber, $tab);
 			case "cancel":
-				if (count($args) != 2) return false;
-				if (!isset($this->tasks[$args[1]])){
-					$c->sendMessage(mc::_("Task %1% not found!",$args[1]));
+				if(count($args) != 2) return false;
+				if(!isset($this->tasks[$args[1]])){
+					$c->sendMessage(mc::_("Task %1% not found!", $args[1]));
 					return true;
 				}
 				$this->owner->getServer()->getScheduler()->cancelTask($args[1]);
-				$c->sendMessage(mc::_("Cancelling Task %1%",$args[1]));
+				$c->sendMessage(mc::_("Cancelling Task %1%", $args[1]));
 				return true;
 		}
 		return false;
 	}
-  public function schedule($secs,$cmdline) {
+
+	public function schedule($secs, $cmdline){
 		$h = $this->owner->getServer()->getScheduler()->scheduleDelayedTask(
-			new PluginCallbackTask($this->owner,[$this,"runCommand"],[$cmdline]),
+			new PluginCallbackTask($this->owner, [$this, "runCommand"], [$cmdline]),
 			$secs * 20
 		);
-		$this->tasks[$h->getTaskId()] = [time()+$secs,$cmdline];
+		$this->tasks[$h->getTaskId()] = [time() + $secs, $cmdline];
 	}
-	private function cmdAfter(CommandSender $c,$args) {
-		if (count($args) < 2) return false;
-		if (!is_numeric($args[0])) {
-			$c->sendMessage(mc::_("Unable to specify delay %1%",$args[0]));
+
+	private function cmdAfter(CommandSender $c, $args){
+		if(count($args) < 2) return false;
+		if(!is_numeric($args[0])){
+			$c->sendMessage(mc::_("Unable to specify delay %1%", $args[0]));
 			return false;
 		}
 		$secs = array_shift($args);
-		$c->sendMessage(mc::_("Scheduled for %1%",date(DATE_RFC2822,time()+$secs)));
+		$c->sendMessage(mc::_("Scheduled for %1%", date(DATE_RFC2822, time() + $secs)));
 		$h = $this->owner->getServer()->getScheduler()->scheduleDelayedTask(
-			new PluginCallbackTask($this->owner,[$this,"runCommand"],[implode(" ",$args)]),
+			new PluginCallbackTask($this->owner, [$this, "runCommand"], [implode(" ", $args)]),
 			$secs * 20
 		);
-		$this->tasks[$h->getTaskId()] = [time()+$secs,implode(" ",$args)];
+		$this->tasks[$h->getTaskId()] = [time() + $secs, implode(" ", $args)];
 		return true;
 	}
-	private function cmdAt(CommandSender $c,$args) {
-		if (count($args) < 2) {
-			$c->sendMessage(mc::_("Time now is: %1%",date(DATE_RFC2822)));
+
+	private function cmdAt(CommandSender $c, $args){
+		if(count($args) < 2){
+			$c->sendMessage(mc::_("Time now is: %1%", date(DATE_RFC2822)));
 			return false;
 		}
-		if (($pos = array_search(":",$args)) != false) {
-			if ($pos == 0) return false;
+		if(($pos = array_search(":", $args)) != false){
+			if($pos == 0) return false;
 			$ts = [];
-			while ($pos--) {
+			while($pos--){
 				$ts[] = array_shift($args);
 			}
 			array_shift($args);
-			if (count($args) == 0) return false;
-			$ts = implode(" ",$ts);
+			if(count($args) == 0) return false;
+			$ts = implode(" ", $ts);
 			$when = strtotime($ts);
-		} else {
-			foreach (array_shift($args) as $ts){
-            if(($when = strtotime($ts)) == false && count($args) > 1) {
-                    $ts .= ' '.array_shift($args);
-                }
-            }
+		}else{
+			foreach(array_shift($args) as $ts){
+				if(($when = strtotime($ts)) == false && count($args) > 1){
+					$ts .= ' ' . array_shift($args);
+				}
+			}
 		}
-		if (($when ?? false) == false) {
-			$c->sendMessage(mc::_("Unable to parse time specification %1%",$ts));
+		if(($when ?? false) == false){
+			$c->sendMessage(mc::_("Unable to parse time specification %1%", $ts));
 			return false;
 		}
-		while (($when = $when ?? 0) < time()) {
+		while(($when = $when ?? 0) < time()){
 			$when += 86400; // We can not travel back in time...
 		}
-		$c->sendMessage(mc::_("Scheduled for %1%",date(DATE_RFC2822,$when)));
+		$c->sendMessage(mc::_("Scheduled for %1%", date(DATE_RFC2822, $when)));
 		$h = $this->owner->getServer()->getScheduler()->scheduleDelayedTask(
-			new PluginCallbackTask($this->owner,[$this,"runCommand"],[implode(" ",$args)]),
-			($when - time())*20
+			new PluginCallbackTask($this->owner, [$this, "runCommand"], [implode(" ", $args)]),
+			($when - time()) * 20
 		);
-		$this->tasks[$h->getTaskId()] = [$when, implode(" ",$args)];
+		$this->tasks[$h->getTaskId()] = [$when, implode(" ", $args)];
 		return true;
 	}
 }
