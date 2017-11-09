@@ -1,8 +1,6 @@
 <?php
+
 namespace aliuly\grabbag\common;
-//use pocketmine\scheduler\AsyncTask;
-//use pocketmine\Server;
-//use pocketmine\command\ConsoleCommandSender;
 
 /**
  * This class implements a basic RCON client.

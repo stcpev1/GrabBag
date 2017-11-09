@@ -131,7 +131,7 @@ class PMScript{
 	static public function getCommonInterp(Plugin $owner){
 		$pm = $owner->getServer()->getPluginManager();
 		if(($gb = $pm->getPlugin("GrabBag")) !== null){
-			if($gb->isEnabled() && MPMU::apiCheck($gb->getDescription()->getVersion(), "2.3")){
+			if($gb->isEnabled() && MPMU::apiCheck($gb->getDescription()->getVersion(), "2.4")){
 				$vars = $gb->api->getInterp();
 				if($vars instanceof PMScript) return $vars;
 			}
@@ -146,7 +146,7 @@ class PMScript{
 
 	/**
 	 * Define additional constants on the fly...
-	 * @param string $name
+	 * @param string $str
 	 * @param mixed  $value
 	 */
 	public function define($str, $value){
@@ -201,11 +201,12 @@ class PMScript{
 	/**
 	 * Run a script file
 	 * @param CommandSender $ctx - Command context
-	 * @param callable      $php - Loaded PMScript
+	 * @param callable        $path - Loaded PMScript
 	 * @param array         $args - Command args
-	 * @param array         $opts - Some environemnt variables
+	 * @param array         $opts - Some environment variables
+	 * @return bool
 	 */
-	public function runScriptFile(CommandSender $ctx, $path, array &$args, array &$opts){
+	public function runScriptFile(CommandSender $ctx, callable $path, array &$args, array &$opts) : bool{
 		$php = $this->loadScriptFile($path);
 		if($php === false) return false;
 		$this->executeScript($ctx, $php, $args, $opts);
@@ -216,6 +217,7 @@ class PMScript{
 	 * load a script from file (May implement a cache in the future...)
 	 * @param string $path - path to file to load
 	 * @param bool   $cache - enable/disable caching
+	 * @return mixed
 	 */
 	public function loadScriptFile($path, $cache = false){
 		return $this->loadScriptCode(file_get_contents($path));
@@ -225,11 +227,12 @@ class PMScript{
 	 * Execute a PMScript
 	 *
 	 * @param CommandSender $ctx - Command context
-	 * @param callable      $php - Loaded PMScript
+	 * @param callable      $pmscode - Loaded PMScript
 	 * @param array         $args - Command args
 	 * @param array         $opts - Some environemnt variables
+	 * @return bool
 	 */
-	public function runScriptCode(CommandSender $ctx, $pmscode, array &$args, array &$opts){
+	public function runScriptCode(CommandSender $ctx, $pmscode, array &$args, array &$opts) : bool{
 		$php = $this->loadScriptCode($pmscode);
 		if($php === false) return false;
 		$this->executeScript($ctx, $php, $args, $opts);

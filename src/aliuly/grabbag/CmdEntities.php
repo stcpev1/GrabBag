@@ -31,6 +31,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\command\Command;
 use pocketmine\math\Vector3;
 
+use pocketmine\item\Item;
 use pocketmine\Player;
 use pocketmine\entity\Living;
 use pocketmine\entity\Human;
@@ -196,7 +197,7 @@ class CmdEntities extends BasicCli implements CommandExecutor{
 			$pos = implode(",", [floor($e->getX()), floor($e->getY()), floor($e->getZ())]);
 			if($e instanceof Living){
 				$name = $e->getName();
-			}elseif($e instanceof \pocketmine\entity\Item){
+			}elseif($e instanceof Item){
 				$name = mc::_("Item:%1%", ItemName::str($e->getItem()));
 			}else{
 				$name = basename(strtr(get_class($e), "\\", "/"));

@@ -22,7 +22,7 @@ abstract class MoneyAPI{
 	 */
 	static public function noMoney(PluginBase $plugin, $level = LogLevel::WARNING){
 		if(class_exists(__NAMESPACE__ . "\\mc", false)){
-			$plugin->getLogger()->error($level, TextFormat::RED .
+			$plugin->getLogger()->error(TextFormat::RED .
 				mc::_("! MISSING MONEY API PLUGIN"));
 			$plugin->getLogger()->error(TextFormat::BLUE .
 				mc::_(". Please install one of the following:"));
@@ -35,7 +35,7 @@ abstract class MoneyAPI{
 			$plugin->getLogger()->error(TextFormat::WHITE .
 				mc::_("* MassiveEconomy"));
 		}else{
-			$plugin->getLogger()->error($level, TextFormat::RED .
+			$plugin->getLogger()->error(TextFormat::RED .
 				"! MISSING MONEY API PLUGIN");
 			$plugin->getLogger()->error(TextFormat::BLUE .
 				". Please install one of the following:");
@@ -55,7 +55,7 @@ abstract class MoneyAPI{
 	 *
 	 * @param PluginBase $plugin - current plugin
 	 * @param PluginBase $api - found plugin
-	 * @param LogLevel   $level - optional log level
+	 * @param string $level - optional log level
 	 */
 	static public function foundMoney(PluginBase $plugin, $api, $level = LogLevel::INFO){
 		if(class_exists(__NAMESPACE__ . "\\mc", false)){
@@ -71,7 +71,7 @@ abstract class MoneyAPI{
 	/**
 	 * Find a supported *money* plugin
 	 *
-	 * @param var obj - Server or Plugin object
+	 * @param Server|Plugin $obj - Server or Plugin object
 	 * @return null|Plugin
 	 */
 	static public function moneyPlugin($obj){

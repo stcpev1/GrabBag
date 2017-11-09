@@ -35,8 +35,9 @@ abstract class InvUtils{
 	 * @param Player   $target
 	 * @param Item     $item
 	 * @param int|null $count
+	 * @return int
 	 */
-	static public function rmInvItem(Player $target, Item $item, $count = null){
+	static public function rmInvItem(Player $target, Item $item, $count = null) : int{
 		$k = 0;
 		foreach($target->getInventory()->getContents() as $slot => &$inv){
 			if($inv->getId() != $item->getId()) continue;

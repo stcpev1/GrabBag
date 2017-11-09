@@ -39,6 +39,7 @@ class MinecraftQuery{
 	 * @param string $Ip - IP or hostname to query
 	 * @param int    $Port - Port to connect to
 	 * @param int    $Timeout - Timeout in seconds
+	 * @throws MinecraftQueryException
 	 */
 	public function Connect($Ip, $Port = 19132, $Timeout = 3){
 		if(!is_int($Timeout) || $Timeout < 0){
@@ -85,7 +86,7 @@ class MinecraftQuery{
 	}
 
 	private function GetChallenge(){
-		$Data = $this->WriteData(self :: HANDSHAKE);
+		$Data = $this->WriteData(self::HANDSHAKE);
 
 		if($Data === false){
 			throw new MinecraftQueryException('Failed to receive challenge.');
@@ -95,7 +96,7 @@ class MinecraftQuery{
 	}
 
 	private function GetStatus($Challenge){
-		$Data = $this->WriteData(self :: STATISTIC, $Challenge . Pack('c*', 0x00, 0x00, 0x00, 0x00));
+		$Data = $this->WriteData(self::STATISTIC, $Challenge . Pack('c*', 0x00, 0x00, 0x00, 0x00));
 
 		if(!$Data){
 			throw new MinecraftQueryException('Failed to receive status.');

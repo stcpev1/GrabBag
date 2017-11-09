@@ -91,7 +91,7 @@ class CmdAlias extends BasicCli implements CommandExecutor{
 		// Create an alias
 		$alias = array_shift($args);
 		$cmdline = implode(" ", $args);
-		if($this->cmdAlias($alias, $cmdline, $force)){
+		if($this->cmdAlias($sender, [$alias, $cmdline, $force])){
 			$sender->sendMessage(TextFormat::GREEN . mc::_("Created alias \"%1%\" as \"%2%\"", $alias, $cmdline));
 		}else{
 			$sender->sendMessage(TextFormat::RED . mc::_("%1% already exists use -f option", $alias));

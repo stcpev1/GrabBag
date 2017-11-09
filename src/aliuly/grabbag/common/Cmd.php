@@ -48,7 +48,7 @@ abstract class Cmd{
 	 * Chat a message as a given player
 	 *
 	 * @param Player|CommandSender $sender - Entity to impersonate
-	 * @param string[]|string      $msg - messages to send
+	 * @param string[]|string      $msgs - messages to send
 	 */
 	static public function chat($sender, $msgs){
 		if(!is_array($msgs)) $msgs = [$msgs];
@@ -161,10 +161,11 @@ abstract class Cmd{
 
 	/**
 	 * Unregisters a command
-	 * @param Server|Plugin $obj - Access path to server instance
+	 * @param Server|Plugin $srv - Access path to server instance
 	 * @param string        $cmd - Command name to remove
+	 * @return bool
 	 */
-	static public function rmCommand($srv, $cmd){
+	static public function rmCommand($srv, $cmd) : bool{
 		$cmdMap = $srv->getCommandMap();
 		$oldCmd = $cmdMap->getCommand($cmd);
 		if($oldCmd === null) return false;

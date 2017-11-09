@@ -97,7 +97,7 @@ abstract class ItemName{
 	 * Given an pocketmine\item\Item object, it returns a friendly name
 	 * for it.
 	 *
-	 * @param Item item
+	 * @param Item $item
 	 * @return string
 	 */
 	static public function str(Item $item){

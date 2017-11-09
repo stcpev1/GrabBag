@@ -82,7 +82,7 @@ abstract class BasicCli{
 	}
 
 	/**
-	 * Use for paginaged output implementation.
+	 * Use for paginated output implementation.
 	 * Shows a bunch of line in paginated output.
 	 *
 	 * @param CommandSender $sender - entity that we need to display text to
@@ -120,7 +120,7 @@ abstract class BasicCli{
 	 *
 	 * @param CommandSender $sender - entity that we need to display text to
 	 * @param int           $pageNumber - page that we need to display
-	 * @param string[][]    $txt - Array containing one element per cell
+	 * @param string[][]    $tab - Array containing one element per cell
 	 * @return bool true
 	 */
 	protected function paginateTable(CommandSender $sender, $pageNumber, array $tab){

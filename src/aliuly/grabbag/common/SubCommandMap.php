@@ -9,6 +9,31 @@ use aliuly\grabbag\common\mc;
  * Sub Command dispatcher
  */
 class SubCommandMap{
+
+	/**
+	 * @var array
+	 */
+	public $executors;
+	/**
+	 * @var array
+	 */
+	public $help;
+	/**
+	 * @var array
+	 */
+	public $usage;
+	/**
+	 * @var array
+	 */
+	public $aliases;
+	/**
+	 * @var array
+	 */
+	public $permission;
+
+	/**
+	 * SubCommandMap constructor.
+	 */
 	public function __construct(){
 		$this->executors = [];
 		$this->help = [];
@@ -78,22 +103,40 @@ class SubCommandMap{
 		}
 	}
 
+	/**
+	 * @param $scmd
+	 * @return mixed|null
+	 */
 	public function getUsage($scmd){
 		return isset($this->usage[$scmd]) ? $this->usage[$scmd] : null;
 	}
 
+	/**
+	 * @param $scmd
+	 * @return mixed|null
+	 */
 	public function getAlias($scmd){
 		return isset($this->aliases[$scmd]) ? $this->aliases[$scmd] : null;
 	}
 
+	/**
+	 * @param $scmd
+	 * @return mixed|null
+	 */
 	public function getHelpMsg($scmd){
 		return isset($this->help[$scmd]) ? $this->help[$scmd] : null;
 	}
 
+	/**
+	 * @return array
+	 */
 	public function getHelp(){
 		return $this->help;
 	}
 
+	/**
+	 * @return array
+	 */
 	public function getAliases(){
 		return $this->aliases;
 	}

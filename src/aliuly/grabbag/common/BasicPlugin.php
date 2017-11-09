@@ -4,7 +4,7 @@ namespace aliuly\grabbag\common;
 use pocketmine\plugin\PluginBase;
 use pocketmine\command\CommandSender;
 use pocketmine\command\Command;
-use pocketmine\command\CommandExecutor;
+use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 use pocketmine\utils\Config;
 
@@ -30,7 +30,7 @@ abstract class BasicPlugin extends PluginBase{
 	 * @param string $xhlp - optional help format.
 	 * @return array
 	 */
-	protected function modConfig($ns, $mods, $defaults, $xhlp = ""){
+	protected function modConfig($ns, $mods, $defaults, $xhlp = ""): array{
 		if(!isset($defaults["features"])) $defaults["features"] = [];
 		foreach($mods as $i => $j){
 			$defaults["features"][$i] = $j[1];
@@ -69,7 +69,7 @@ abstract class BasicPlugin extends PluginBase{
 		$c = count($this->modules);
 		if($c == 0){
 			$this->getLogger()->info(mc::_("NO features enabled"));
-			return;
+			return [];
 		}
 		$this->session = null;
 		$this->getLogger()->info(mc::n(mc::_("Enabled one feature"),
@@ -166,7 +166,7 @@ abstract class BasicPlugin extends PluginBase{
 	 * Clears a player related state
 	 *
 	 * @param string        $label - state variable to clear
-	 * @param Player|string $player - intance of Player or their name
+	 * @param Player|string $player - instance of Player or their name
 	 */
 	public function unsetState($label, $player){
 		if($this->session === null) return;

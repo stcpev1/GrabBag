@@ -7,8 +7,8 @@ namespace aliuly\grabbag\common;
 abstract class FileUtils{
 	/**
 	 * Recursive copy function
-	 * @param string src source path
-	 * @param string dst source path
+	 * @param string $src source path
+	 * @param string $dst source path
 	 * @return bool
 	 */
 	static public function cp_r($src, $dst){
@@ -31,12 +31,12 @@ abstract class FileUtils{
 
 	/**
 	 * Recursive delete function
-	 * @param string path
+	 * @param string $path
 	 * @return bool
 	 */
 	static public function rm_r($path){
 		if(!is_link($path) && is_dir($path)){
-			$objects = scandir($src);
+			$objects = scandir($path);
 			if($objects === false) return false;
 			foreach($objects as $file){
 				if($file == "." || $file == "..") continue;

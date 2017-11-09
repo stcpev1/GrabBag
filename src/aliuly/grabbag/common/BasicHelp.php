@@ -4,8 +4,7 @@ namespace aliuly\grabbag\common;
 use pocketmine\command\CommandSender;
 use pocketmine\command\Command;
 use pocketmine\utils\TextFormat;
-use aliuly\grabbag\common\mc;
-use aliuly\grabbag\common\BasicCli;
+use pocketmine\plugin\PluginBase;
 
 /**
  * Implements simple help functionality for sub-commands
@@ -30,6 +29,7 @@ class BasicHelp extends BasicCli{
 	 * @param string        $scmd - sub-command being executed
 	 * @param mixed         $data - Additional data passed to sub-command (global options)
 	 * @param string[]      $args - arguments for sub-command
+	 * @return bool
 	 */
 	public function onSCommand(CommandSender $c, Command $cc, $scmd, $data, array $args){
 		$cm = $this->owner->getSCmdMap();
