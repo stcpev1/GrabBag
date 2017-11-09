@@ -1,24 +1,19 @@
 # GrabBag
 
+[![Poggit Release](https://poggit.pmmp.io/shield.approved/GrabBag)](https://poggit.pmmp.io/p/GrabBag)
+
 - Summary: Collection of miscellaneous commands and listener modules
 - PocketMine-MP version: 1.7dev API 3.0.0-ALPHA9)
 - DependencyPlugins: 
 - OptionalPlugins: FastTransfer
 - Categories: General 
 - Plugin Access: Internet Services, Other Plugins, Manages Permissions, Commands, Data Saving, Entities, Tile Entities, Manages Plugins 
-- WebSite: https://github.com/Muirfield/GrabBag
+
 
 ## Overview
 
-This documentation was last updated for version **2.4.0**.
+This documentation was last updated for version **2.4.0**
 
-Please go to
-[github](https://github.com/Muirfield/GrabBag)
-for the most up-to-date documentation.
-
-You can also download this plugin from this [page](https://github.com/Muirfield/GrabBag/releases).
-
-<!-- end-include -->
 
 A miscellaneous collection of commands and listener modules.  **All**
 features can be configured to be _disabled|enabled_ so as to co-exist
@@ -26,9 +21,6 @@ with other plugins.
 
 This plugin is focused more towards commands to help system
 administration.
-
-<!-- php:$h=3; -->
-<!-- template: gd2/cmdoverview.md -->
 
 ### Entity Management
 
@@ -111,19 +103,14 @@ administration.
 * throw: Throw a player in the air
 
 
-<!-- end-include -->
-
 ### Modules
 
-<!-- template: gd2/modovw.md -->
 * blood-particles: Display particles when a player gets hit
 * broadcast-ft: Broadcast player's using FastTransfer
 * broadcast-tp: Broadcast player teleports
 * cmd-selector: Implements "@" command prefixes
 * join-mgr: Announce joining ops, and show server motd
 * repeater: Uses **!!** to repeat command with changes
-
-<!-- end-include -->
 
 ## Documentation
 
@@ -137,7 +124,6 @@ plugins.
 
 The following commands are available:
 
-<!-- template: gd2/subcmds.md -->
 * after: schedule command after a number of seconds<br/>
   usage: **after** _&lt;seconds&gt;_ _&lt;command&gt;|list|cancel_ _&lt;id&gt;_
   
@@ -488,22 +474,12 @@ The following commands are available:
 * whois: Gives detailed information on players<br/>
   usage: **whois** _&lt;player&gt;_
 
-<!-- end-include -->
-
-<!-- snippet: cmdnotes  -->
 
 Commands scheduled by **at** and **after** will only run as
 long as the server is running.  These scheduled commands will *not*
 survive server reloads or reboots.  If you want persistent commands,
-it is recommended that you use a plugin like
-[TimeCommander](http://forums.pocketmine.net/plugins/timecommander.768/).
+it is recommended that you use a plugin like TimeCommander
 
-<!-- end-include -->
-
-### Module reference
-
-<!-- php:$h=4; -->
-<!-- template: gd2/mods.md -->
 #### blood-particles
 
 Display particles when a player gets hit
@@ -573,20 +549,13 @@ things:
   - Will insert _text_ at the beginning of the command.
 
 
-
-<!-- end-include -->
-
-<!-- template: test.md -->
-<!-- MISSING TEMPLATE: test.md ->
-
-<!-- end-include -->
-
 ## Command Selectors
-<!-- snippet: cmdselector  -->
 
 This adds "@" prefixes for commands.
 See
+
 [Command Prefixes](http://minecraft.gamepedia.com/Commands#Target_selector_arguments)
+
 for an explanation on prefixes.
 
 This only implements the following prefixes:
@@ -603,15 +572,11 @@ The following selectors are implemented:
 - name: player's name
 - w: world
 
-<!-- end-include -->
-
 ### Configuration
 
 Configuration is through the **config.yml** file.
 The following sections are defined:
 
-<!-- php:$h=4; -->
-<!-- template: gd2/cfg.md -->
 #### broadcast-tp
 
 *  world: world broadcast setting. If true, will broadcast teleports accross worlds.
@@ -647,11 +612,9 @@ This section configures peer servers.  This can be used with
 *rcon* and *query* commands.
 
 
-<!-- end-include -->
 
 ### Permission Nodes
 
-<!-- snippet: rtperms -->
 * gb.cmd.pushpoptp (op): position stack
 * gb.cmd.freeze (op): freeze/thaw players
 * gb.cmd.get (op): get blocks
@@ -727,9 +690,7 @@ This section configures peer servers.  This can be used with
 * gb.cmd.throw (op): Troll players
 * gb.cmd.timings (op): view timings report
 * gb.cmd.pluginmgr (op): Run-time management of plugins
-<!-- end-include -->
 
-<!-- template: gd2/mctxt.md -->
 
 ## Translations
 
@@ -745,7 +706,6 @@ You can provide your own message file by creating a file called
 Check [github](https://github.com/Muirfield/GrabBag/tree/master/resources/messages)
 for sample files.
 
-<!-- end-include -->
 
 ## Additional Libraries
 
@@ -893,8 +853,6 @@ The following third party libraries are included:
   * Command repeater
 * 1.0.0 : First public release
 
-<!-- php:$copyright="2015"; -->
-<!-- template: gd2/gpl2.md -->
 # Copyright
 
     GrabBag
@@ -913,6 +871,3 @@ The following third party libraries are included:
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-<!-- end-include -->
-
