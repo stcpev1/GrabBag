@@ -26,7 +26,7 @@ class CmdSpawn extends BasicCli implements CommandExecutor {
 		$pos = $pl->getLevel()->getSafeSpawn();
 		$pl->teleport($pos);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if ($cmd->getName() != "spawn") return false;
 		if (count($args) != 0) return false;
 		if (!MPMU::inGame($sender)) return true;

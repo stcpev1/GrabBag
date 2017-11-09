@@ -67,7 +67,7 @@ class CmdFollowMgr extends BasicCli implements Listener,CommandExecutor {
 		$this->leaders = [];
 		$this->owner->getServer()->getPluginManager()->registerEvents($this, $this->owner);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		$s = MPMU::iName($sender);
 		switch ($cmd->getName()) {
 			case "followers":

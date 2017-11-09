@@ -51,7 +51,7 @@ class CmdClearInv extends BasicCli implements CommandExecutor {
 											"usage" => mc::_("/rminv [player] <item> [quantity]"),
 											"permission" => "gb.cmd.rminv"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if ($cmd->getName() == "rminv") return $this->rmInvItem($sender,$args);
 		if (count($args) > 1) return false;
 		if (count($args) == 0) {

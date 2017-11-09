@@ -83,7 +83,7 @@ class ServerList extends BasicCli implements CommandExecutor {
     return null;
   }
 
-  public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+  public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
     if (count($args) == 0) return false;
     switch($cmd->getName()) {
       case "servers":

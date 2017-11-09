@@ -38,7 +38,7 @@ class CmdMuteMgr extends BasicCli implements Listener,CommandExecutor {
 		$this->mutes = [];
 		$this->owner->getServer()->getPluginManager()->registerEvents($this, $this->owner);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if (count($args) == 0) {
 			$sender->sendMessage(mc::_("Mutes: %1%",count($this->mutes)));
 			if (count($this->mutes))

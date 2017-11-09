@@ -47,7 +47,7 @@ class CmdSpectator extends BasicCli implements CommandExecutor,Listener {
 		$this->watchers = [];
 		$this->owner->getServer()->getPluginManager()->registerEvents($this, $this->owner);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if (count($args) == 0) {
 			$sender->sendMessage(mc::_("Spectators: %1%",count($this->watchers)));
 			if (count($this->watchers))

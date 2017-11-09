@@ -22,7 +22,7 @@ abstract class ArmorItems {
 
   /**
    * Returns the armor part of a string
-   * @param str $str - string to parse
+   * @param string $str - string to parse
    * @return int
    */
   static public function str2part($str) {
@@ -55,7 +55,7 @@ abstract class ArmorItems {
   }
   /**
    * Returns the armor quality of a string
-   * @param str $str - string to parse
+   * @param string $str - string to parse
    * @return int
    */
   static public function str2quality($str) {

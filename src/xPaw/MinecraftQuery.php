@@ -37,7 +37,7 @@ class MinecraftQuery
 	private $Info;
 
   /** Query server
-	 * @param str $Ip - IP or hostname to query
+	 * @param string $Ip - IP or hostname to query
 	 * @param int $Port - Port to connect to
 	 * @param int $Timeout - Timeout in seconds
 	 */
@@ -47,6 +47,7 @@ class MinecraftQuery
 		{
 			throw new \InvalidArgumentException( 'Timeout must be an integer.' );
 		}
+		$ErrNo = $ErrStr = null;
 		$this->Socket = @FSockOpen( 'udp://' . $Ip, (int)$Port, $ErrNo, $ErrStr, $Timeout );
 
 		if( $ErrNo || $this->Socket === false )

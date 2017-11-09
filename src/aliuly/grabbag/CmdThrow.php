@@ -37,7 +37,7 @@ class CmdThrow extends BasicCli implements CommandExecutor {
 		}
 
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if ($cmd->getName() != "throw") return false;
 		if (count($args) > 2 || count($args) == 0) return false;
 		$pl = $this->owner->getServer()->getPlayer($args[0]);

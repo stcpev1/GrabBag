@@ -28,7 +28,7 @@ class CmdWhois extends BasicCli implements CommandExecutor {
 								"usage" => "/whois <player>",
 								"permission" => "gb.cmd.whois"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if ($cmd->getName() != "whois") return false;
 		$pageNumber = $this->getPageNumber($args);
 		if (count($args) != 1) {

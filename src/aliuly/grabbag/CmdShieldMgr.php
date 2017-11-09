@@ -41,7 +41,7 @@ class CmdShieldMgr extends BasicCli implements Listener,CommandExecutor {
 			$this->unsetState($player);
 		}
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if (count($args) !== 0) return false;
 		if ($cmd->getName() != "shield") return false;
 		if (!MPMU::inGame($sender)) return true;

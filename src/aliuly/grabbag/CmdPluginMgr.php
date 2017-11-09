@@ -64,7 +64,7 @@ class CmdPluginMgr extends BasicCli implements CommandExecutor {
 								"aliases" => ["pm"],
 								"permission" => "gb.cmd.pluginmgr"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if ($cmd->getName() != "pluginmgr") return false;
 		$pageNumber = $this->getPageNumber($args);
 		if (count($args) < 2) return false;

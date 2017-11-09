@@ -51,7 +51,7 @@ class CmdQuery extends BasicCli implements CommandExecutor {
 								"usage" => mc::_("/query [list|info|plugins|players|summary] <opts>"),
 								"permission" => "gb.cmd.query"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if (count($args) == 0) $args = ["summary"];
 		switch($cmd->getName()) {
 			case "query":

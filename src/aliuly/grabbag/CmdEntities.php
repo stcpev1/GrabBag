@@ -53,7 +53,7 @@ class CmdEntities extends BasicCli implements CommandExecutor {
 								"aliases" => ["et"],
 								"permission" => "gb.cmd.entities"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if ($cmd->getName() != "entities") return false;
 		if (count($args) == 0) $args = [ "ls" ];
 		$scmd = strtolower(array_shift($args));

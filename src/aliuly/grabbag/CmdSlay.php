@@ -38,7 +38,7 @@ class CmdSlay extends BasicCli implements CommandExecutor,Listener {
 		}
 		$victim->setHealth(0);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if ($cmd->getName() != "slay") return false;
 		if (!isset($args[0])) {
 			$sender->sendMessage(mc::_("Must specify a player to slay"));

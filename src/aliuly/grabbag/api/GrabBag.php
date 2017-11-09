@@ -44,7 +44,7 @@ class GrabBag {
   /**
    * Check if module is available...
    * This will throw an exception if the module is not available
-   * @param str $module - module name
+   * @param string $module - module name
    * @return mixed|null
    */
   public function getModule($module) {
@@ -55,7 +55,7 @@ class GrabBag {
   /**
    * Check if feature is supported and has been enabled in the GrabBag
    * configuration file.
-   * @param str $feature - module name
+   * @param string $feature - module name
    * @return bool
    */
    public function getFeature($feature) {
@@ -115,7 +115,7 @@ class GrabBag {
   }
   /**
    * Return a list of frozen players
-   * @return str[]
+   * @return string[]
    */
   public function getFrosties() {
     return $this->getModule("freeze-thaw")->getFrosties();
@@ -140,8 +140,9 @@ class GrabBag {
   /**
    * Check if player is invisible...
    * @param Player $player - player to check
+   * @return bool
    */
-  public function isInvisible(Player $player) {
+  public function isInvisible(Player $player) : bool{
     return $this->getModule("invisible")->isInvisible($player);
   }
   //////////////////////////////////////////////////////////////
@@ -150,7 +151,7 @@ class GrabBag {
   /**
    * Schedule a command to be run
    * @param int $secs - execute after this number of seconds
-   * @param str $cmdline - command line to execute
+   * @param string $cmdline - command line to execute
    */
   public function after($cmdline,$secs) {
     $this->getModule("after-at")->schedule($secs,$cmdline);
@@ -160,8 +161,8 @@ class GrabBag {
   //////////////////////////////////////////////////////////////
   /**
    * Define a command alias
-   * @param str $alias - alias name
-   * @param str $cmdline - command line to execute
+   * @param string $alias - alias name
+   * @param string $cmdline - command line to execute
    * @param bool $force - overwrite existing commands
    * @return bool - true on succes, false on failure
    */
@@ -219,7 +220,7 @@ class GrabBag {
   //////////////////////////////////////////////////////////////
   /**
    * Returns players that are leading others
-   * @return str[]
+   * @return string[]
    */
   public function getLeaders() {
     return $this->getModule("followers")->getLeaders();
@@ -227,7 +228,7 @@ class GrabBag {
   /**
    * Returns followers of a certain leader
    * @param Player $leader
-   * @return str[]
+   * @return string[]
    */
   public function getFollowers(Player $leader) {
     return $this->getModule("followers")->getFollowers($leader);
@@ -259,7 +260,7 @@ class GrabBag {
   //////////////////////////////////////////////////////////////
   /**
    * Returns the list of muted players
-   * @return str[]
+   * @return string[]
    */
   public function getMutes() {
     return $this->getModule("mute-unmute")->getMutes();
@@ -286,7 +287,7 @@ class GrabBag {
   /**
    * File a report
    * @param CommandSender $c
-   * @param str $report
+   * @param string $report
    */
   public function fileReport(CommandSender $c, $report) {
     $this->getModule("opms-rpt")->rptCmd($player, [ ">", $report]);
@@ -333,8 +334,8 @@ class GrabBag {
   //////////////////////////////////////////////////////////////
   /**
    * Returns a list of skins
-   * @param str $folder - folder to search
-   * @return str[]
+   * @param string $folder - folder to search
+   * @return string[]
    */
   public function getSkins($folder = null) {
 		return $this->getModule("skinner")->getSkins($folder);
@@ -342,8 +343,8 @@ class GrabBag {
   /**
    * Save a player's skin
    * @param Human $human - character to save
-   * @param str $fn - file name
-   * @param str $folder - folder to search
+   * @param string $fn - file name
+   * @param string $folder - folder to search
    * @return int - bytes written
    *
    */
@@ -353,8 +354,8 @@ class GrabBag {
   /**
    * Load a player's skin
    * @param Human $human - character to load
-   * @param str $fn - file name
-   * @param str $folder - folder to search
+   * @param string $fn - file name
+   * @param string $folder - folder to search
    * @return bool - true on succes, false on failure
    *
    */
@@ -367,7 +368,7 @@ class GrabBag {
   /**
    * Kills a player with optional message
    * @param Player $victim
-   * @param str $msg
+   * @param string $msg
    */
   public function slay(Player $victim, $msg = "") {
     $this->getModule("slay")->slay($victim,$msg);
@@ -387,14 +388,14 @@ class GrabBag {
   //////////////////////////////////////////////////////////////
   /**
    * Return the current service mode status
-   * @return false|str
+   * @return false|string
    */
   public function getServiceMode() {
     return $this->getModule("srvmode")->getServiceMode();
   }
   /**
    * Change the service mode
-   * @param str $msg
+   * @param string $msg
    */
   public function setServiceMode($msg) {
     $this->getModule("srvmode")->setServiceMode($msg);
@@ -470,7 +471,7 @@ class GrabBag {
   }
   /**
    * Add Server
-   * @param str $id - Server Id
+   * @param string $id - Server Id
    * @param array $attrs - Server attributes
    * @return bool - true on success, false on error
    */
@@ -479,7 +480,7 @@ class GrabBag {
   }
   /**
    * Remove Server
-   * @param str $id - Server Id
+   * @param string $id - Server Id
    * @return bool - true on success, false on error
    */
   public function removeServer($id) {
@@ -487,7 +488,7 @@ class GrabBag {
   }
   /**
    * Get Server attributes
-   * @param str $id - Server Id
+   * @param string $id - Server Id
    * @return array - attributes
    */
   public function getServer($id) {

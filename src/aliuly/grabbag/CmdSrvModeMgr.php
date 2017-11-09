@@ -48,7 +48,7 @@ class CmdSrvModeMgr extends BasicCli implements CommandExecutor,Listener {
 	public function unsetServiceMode() {
 		$this->mode = false;
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if ($cmd->getName() != "servicemode") return false;
 		if (count($args) == 0) {
 			if ($this->getServiceMode() !== false) {

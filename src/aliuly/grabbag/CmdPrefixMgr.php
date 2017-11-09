@@ -42,7 +42,7 @@ class CmdPrefixMgr extends BasicCli implements CommandExecutor,Listener {
 								"permission" => "gb.cmd.prefix"]);
 		$this->owner->getServer()->getPluginManager()->registerEvents($this, $this->owner);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if ($cmd->getName() != "prefix") return false;
 		if (count($args) == 0 || (count($args) == 1 && $args[0] == "-n")) {
 			$this->unsetState($sender);

@@ -25,7 +25,7 @@ class CmdBurn extends BasicCli implements CommandExecutor {
 								"usage" => mc::_("/burn <player> [secs]"),
 								"permission" => "gb.cmd.burn"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if ($cmd->getName() != "burn") return false;
 		if (count($args) > 2 || count($args) == 0) return false;
 		$pl = $this->owner->getServer()->getPlayer($args[0]);

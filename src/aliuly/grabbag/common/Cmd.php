@@ -6,6 +6,9 @@ use pocketmine\command\ConsoleCommandSender;
 use pocketmine\command\CommandSender;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\Player;
+use pocketmine\Server;
+use pocketmine\command\CommandExecutor;
+use pocketmine\plugin\Plugin;
 use pocketmine\command\PluginCommand;
 
 /**
@@ -16,7 +19,7 @@ abstract class Cmd {
 	 * Execute a command as a given player
 	 *
 	 * @param Player|CommandSender $sender - Entity to impersonate
-	 * @param str[]|str $cmd - commands to execute
+	 * @param string[]|string $cmd - commands to execute
 	 * @param bool $show - show commands being executed
 	 */
 	static public function exec($sender,$cmd,$show=true) {
@@ -30,22 +33,22 @@ abstract class Cmd {
 	 * Execute a command capturing output
 	 *
 	 * @param Server $server
-	 * @param str $cmd - command to execute
-	 * @return str
+	 * @param string $cmd - command to execute
+	 * @return string
 	 */
 	static public function system($server, $cmd) {
 		$rcon = new RemoteConsoleCommandSender;
-		$server->distpatchCommand($rcon,$cm);
+		$server->distpatchCommand($rcon,$cmd);
 		return $rcon->getMessage();
 	}
 	/**
 	 * Chat a message as a given player
 	 *
 	 * @param Player|CommandSender $sender - Entity to impersonate
-	 * @param str[]|str $msg - messages to send
+	 * @param string[]|string $msg - messages to send
 	 */
 	static public function chat($sender,$msgs) {
-		if (!is_array($msgs)) $msgs=  [ $msg ];
+		if (!is_array($msgs)) $msgs = [$msgs];
 		foreach ($msgs as $msg) {
 			$sender->getServer()->getPluginManager()->callEvent($ev = new PlayerChatEvent($sender,$msg));
 			if ($ev->isCancelled()) continue;
@@ -67,7 +70,7 @@ abstract class Cmd {
 	 * Execute commands as console
 	 *
 	 * @param Server $server - pocketmine\Server instance
-	 * @param str[]|str $cmd - commands to execute
+	 * @param string[]|string $cmd - commands to execute
 	 * @param bool $show - show commands being executed
 	 */
 	static public function console($server,$cmd,$show=false) {
@@ -87,7 +90,7 @@ abstract class Cmd {
 	 *   capturing all output which is then send to the player.
 	 *
 	 * @param CommandSender $ctx - running context
-	 * @param str $cmdline - command line to execute
+	 * @param string $cmdline - command line to execute
 	 */
 	static public function opexec(CommandSender $ctx, $cmdline) {
 		if (($cm = MPMU::startsWith($cmdline,"+op:")) !== null) {
@@ -121,7 +124,7 @@ abstract class Cmd {
 	 *
 	 * @param Plugin $plugin - plugin that "owns" the command
 	 * @param CommandExecutor $executor - object that will be called onCommand
-	 * @param str $cmd - Command name
+	 * @param string $cmd - Command name
 	 * @param array $yaml - Additional settings for this command.
 	 */
 	static public function addCommand($plugin, $executor, $cmd, $yaml) {
@@ -134,7 +137,7 @@ abstract class Cmd {
 			$aliasList = [];
 			foreach($yaml["aliases"] as $alias) {
 				if(strpos($alias,":")!== false) {
-					$this->owner->getLogger()->info("Unable to load alias $alias");
+					$plugin->getLogger()->info("Unable to load alias $alias");
 					continue;
 				}
 				$aliasList[] = $alias;
@@ -152,7 +155,7 @@ abstract class Cmd {
 	/**
 	 * Unregisters a command
 	 * @param Server|Plugin $obj - Access path to server instance
-	 * @param str $cmd - Command name to remove
+	 * @param string $cmd - Command name to remove
 	 */
 	static public function rmCommand($srv, $cmd) {
 		$cmdMap = $srv->getCommandMap();

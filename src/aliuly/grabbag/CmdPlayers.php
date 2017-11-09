@@ -28,7 +28,7 @@ class CmdPlayers extends BasicCli implements CommandExecutor {
 								"aliases" => ["who"],
 								"permission" => "gb.cmd.players"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if ($cmd->getName() != "players") return false;
 
 		$tab = [[ mc::_("Player"),mc::_("World"),mc::_("Pos"),mc::_("Health"),mc::_("Mode") ]];

@@ -1,30 +1,16 @@
-<img src="https://github.com/Muirfield/GrabBag/raw/master/media/GrabBag-icon.png" style="width:64px;height:64px" width="64" height="64"/>
-
-<!-- meta:Categories = General -->
-<!-- meta:PluginAccess = Internet Services, Other Plugins, Manages Permissions, Commands, Data Saving, Entities, Tile Entities, Manages Plugins -->
-
-<!-- template: gd2/header.md -->
-
 # GrabBag
 
 - Summary: Collection of miscellaneous commands and listener modules
-- PocketMine-MP version: 1.4 (API:1.10.0), 1.4.1 (API:1.11.0), 1.5 (API:1.12.0)
+- PocketMine-MP version: 1.7dev API 3.0.0-ALPHA9)
 - DependencyPlugins: 
 - OptionalPlugins: FastTransfer
 - Categories: General 
 - Plugin Access: Internet Services, Other Plugins, Manages Permissions, Commands, Data Saving, Entities, Tile Entities, Manages Plugins 
 - WebSite: https://github.com/Muirfield/GrabBag
 
-<!-- end-include -->
-
 ## Overview
 
-<!-- php: $v_forum_thread = "http://forums.pocketmine.net/threads/grabbag.7524/"; -->
-<!-- template: prologue.md -->
-
-_NOTE:_
-
-This documentation was last updated for version **2.3.0**.
+This documentation was last updated for version **2.4.0**.
 
 Please go to
 [github](https://github.com/Muirfield/GrabBag)
@@ -800,7 +786,7 @@ The following third party libraries are included:
   * Fixed bugs
   * CmdSelMgr: configure max
   * gift command / broadcast
-  * Switched MPMU::itemName for ItemName::str
+  * Switched MPMU::itemName for ItemName::string
 * 2.2.4:
   * Re-formatted Queries (Requested by @Daniel123)
   * FollowMgr check if player is flying before teleporting.

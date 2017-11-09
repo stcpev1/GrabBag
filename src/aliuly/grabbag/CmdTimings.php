@@ -30,7 +30,7 @@ class CmdTimings extends BasicCli implements CommandExecutor {
 								"aliases" => ["who"],
 								"permission" => "gb.cmd.timings"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if ($cmd->getName() != "showtimings") return false;
 		$pageNumber = $this->getPageNumber($args);
 		if (count($args)) {

@@ -103,7 +103,7 @@ class PMScript {
   /**
    * Execute a command
    * @param CommandSender $ctx - Command context
-   * @param str $cmdline - Command to execute
+   * @param string $cmdline - Command to execute
    * @param array $vars - Variables table for variable expansion
    */
   public function exec(CommandSender $ctx, $cmdline, $vars) {
@@ -142,7 +142,7 @@ class PMScript {
   }
   /**
    * Define additional constants on the fly...
-   * @param str $name
+   * @param string $name
    * @param mixed $value
    */
   public function define($str,$value) {
@@ -158,7 +158,7 @@ class PMScript {
   }
 
   /**
-   * @param str $label - global variable to get
+   * @param string $label - global variable to get
    * @param mixed $default - default value to return is no global found
    * @return mixed
    */
@@ -169,7 +169,7 @@ class PMScript {
   /**
    * Set global variable
    *
-   * @param str $label - state variable to set
+   * @param string $label - state variable to set
    * @param mixed $val - value to set
    * @return mixed
    */
@@ -180,7 +180,7 @@ class PMScript {
   /**
    * Clears a global variable
    *
-   * @param str $label - state variable to clear
+   * @param string $label - state variable to clear
    */
   public function unsetGlob($label) {
     if (!isset($this->globs[$label])) return;
@@ -206,7 +206,7 @@ class PMScript {
 
   /**
    * load a script from file (May implement a cache in the future...)
-   * @param str $path - path to file to load
+   * @param string $path - path to file to load
    * @param bool $cache - enable/disable caching
    */
   public function loadScriptFile($path,$cache = false) {
@@ -256,7 +256,7 @@ class PMScript {
   }
   /**
    * Prepare PMScript and convert into a PHP callable
-   * @param str $pmscript - text script
+   * @param string $pmscript - text script
    */
    public function loadScriptCode($pmscript) {
      $php = "";

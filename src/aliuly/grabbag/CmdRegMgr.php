@@ -41,7 +41,7 @@ class CmdRegMgr extends BasicCli implements CommandExecutor {
 								"usage" => mc::_("/reg [count|list [pattern]|rm [player]|since <when>]"),
 								"permission" => "gb.cmd.regs"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if ($cmd->getName() != "reg") return false;
 		if (count($args) == 0) $args = [ "count" ];
 		$scmd = strtolower(array_shift($args));

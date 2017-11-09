@@ -33,7 +33,7 @@ class CmdSummon extends BasicCli implements CommandExecutor {
 								"usage" => mc::_("/dismiss <player|--all>"),
 								"permission" => "gb.cmd.summon"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		switch($cmd->getName()) {
 			case "summon":
 				return $this->cmdSummon($sender,$args);

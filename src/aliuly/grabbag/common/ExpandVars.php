@@ -4,8 +4,7 @@ namespace aliuly\grabbag\common;
 use pocketmine\plugin\Plugin;
 use pocketmine\Player;
 
-use aliuly\grabbag\common\ItemName;
-use aliuly\grabbag\common\MPMU;
+use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 use pocketmine\utils\Utils;
 use pocketmine\item\Item;
@@ -24,9 +23,9 @@ use pocketmine\item\Item;
  *
  */
 class ExpandVars {
-  /** @const str getSysVarsFn This is the function signature for SysVars */
+  /** @const string getSysVarsFn This is the function signature for SysVars */
   const getSysVarsFn = "getSysVarsV1";
-  /** @const str getPlayerVarsFn This is the function signature for PlayerVars */
+  /** @const string getPlayerVarsFn This is the function signature for PlayerVars */
   const getPlayerVarsFn = "getPlayerVarsV1";
 
   /** @var callable[] Callables to create player specific variables */
@@ -35,12 +34,12 @@ class ExpandVars {
   protected $sysExtensions;
   /** @var array API table */
   protected $apitable;
-  /** @var str[] static _constants_ */
+  /** @var string[] static _constants_ */
   protected $consts;
   /** @var Server pocketmine server context */
   protected $owner;
   /**
-   * @param Server $server - server context
+   * @param Server $owner - Plugin context
    */
   public function __construct(Plugin $owner) {
     $this->owner = $owner;
@@ -102,8 +101,8 @@ class ExpandVars {
 
   /**
    * Define additional constants on the fly...
-   * @param str $name
-   * @param str $value
+   * @param string $name
+   * @param string $value
    */
   public function define($str,$value) {
     $this->consts[$str] = $value;
@@ -116,7 +115,7 @@ class ExpandVars {
   }
   /**
    * Register API
-   * @param str $apiname - API id
+   * @param string $apiname - API id
    * @param mixed $ptr - API object
    */
   public function registerApi($apiname,$ptr) {
@@ -124,7 +123,7 @@ class ExpandVars {
   }
   /**
    * Return API entry, if not found it will throw a RuntimeException
-   * @param str $apiname - API id
+   * @param string $apiname - API id
    * @param bool $exception - if true raise exemption on error
    * @return mixed
    */
@@ -288,7 +287,7 @@ class ExpandVars {
    * Used to initialize the player specific variables table
    */
   protected function initPlayerVars() {
-    if ($this->$playerExtensions !== null) return;
+    if ($this->playerExtensions !== null) return;
     $this->playerExtensions = $this->autoloadExtensions(self::getPlayerVarsFn);
     $this->playerExtensions[] = [ $this , "stdPlayerVars" ];
     $this->playerExtensions[] = [ $this , "invPlayerVars" ];
@@ -432,7 +431,7 @@ class ExpandVars {
   /**
    * Convert bearings in degrees into points in compass
    * @param float $deg - yaw
-   * @return str
+   * @return string
    */
   static public function bearing($deg) {
     // Determine bearing
@@ -453,7 +452,7 @@ class ExpandVars {
     } else {
       return "W";
     }
-    return (int)$deg;
+    //return (int)$deg;
   }
 
 }

@@ -54,7 +54,7 @@ class CmdGmx extends BasicCli implements CommandExecutor {
 								"usage" => mc::_("/gmspc"),
 								"permission" => "gb.cmd.gmspc"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if (!MPMU::inGame($sender)) return true;
 		switch($cmd->getName()) {
 			case "gmc":

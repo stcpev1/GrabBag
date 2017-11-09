@@ -1,5 +1,7 @@
 <?php
 namespace aliuly\grabbag\common;
+
+use pocketmine\plugin\Plugin;
 use pocketmine\Server;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
@@ -88,27 +90,27 @@ abstract class MoneyAPI {
 	/**
 	 * Gives money to a player.
 	 *
-	 * @param Plugin api Economy plugin (from moneyPlugin)
-	 * @param str|IPlayer p Player to pay
-	 * @param int money Amount of money to play (can be negative)
+	 * @param Plugin $api Economy plugin (from moneyPlugin)
+	 * @param string|IPlayer $p Player to pay
+	 * @param int $money Amount of money to play (can be negative)
 	 *
 	 * @return bool
 	 */
 	static public function grantMoney($api,$p,$money) {
 		if(!$api) return false;
 		switch($api->getName()){
-			case "GoldStd": // takes IPlayer|str
+			case "GoldStd": // takes IPlayer|string
 				$api->grantMoney($p, $money);
 				break;
-			case "PocketMoney": // takes str
+			case "PocketMoney": // takes string
 			  if ($p instanceof IPlayer) $p = $p->getName();
 				$api->grantMoney($p, $money);
 				break;
-			case "EconomyAPI": // Takes str
+			case "EconomyAPI": // Takes string
 				if ($p instanceof IPlayer) $p = $p->getName();
 				$api->setMoney($p,$api->mymoney($p)+$money);
 				break;
-			case "MassiveEconomy": // Takes str
+			case "MassiveEconomy": // Takes string
 				if ($p instanceof IPlayer) $p = $p->getName();
 				$api->payPlayer($p->getName(),$money);
 				break;
@@ -121,7 +123,7 @@ abstract class MoneyAPI {
 	 * Gets player balance
 	 *
 	 * @param Plugin $api Economy plugin (from moneyPlugin)
-	 * @param str|IPlayer $player Player to lookup
+	 * @param string|IPlayer $player Player to lookup
 	 *
 	 * @return int
 	 */

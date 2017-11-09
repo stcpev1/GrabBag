@@ -51,7 +51,7 @@ class CmdSkinner extends BasicCli implements CommandExecutor {
 		$human->setSkin(zlib_decode($bin),$slim);
 		return true;
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if ($cmd->getName() != "skin") return false;
 		$pageNumber = $this->getPageNumber($args);
 		if (isset($args[0])) {

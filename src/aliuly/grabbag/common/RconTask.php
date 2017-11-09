@@ -18,9 +18,9 @@ class RconTask extends PluginAsyncTask {
 
 	/**
 	 * @param Plugin $owner
-	 * @param str $callable - method from $owner to call
+	 * @param string $callable - method from $owner to call
 	 * @param array	$remote - Array containing $host,$port,$auth data
-	 * @param str $cmd - remote command to execute
+	 * @param string $cmd - remote command to execute
    * @param array $args	- extra arguments to pass to callback method
 	 */
 	public function __construct(Plugin $owner, $callable, array $remote, $cmd, array $args = []){

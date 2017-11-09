@@ -57,7 +57,7 @@ class CmdAfterAt extends BasicCli implements CommandExecutor {
 								"usage" => mc::_("/at <time> <command>|list|cancel <id>"),
 								"permission" => "gb.cmd.after"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		// Collect expired tasks out of the tasks table...
 		foreach (array_keys($this->tasks) as $tid) {
 			if (!$this->owner->getServer()->getScheduler()->isQueued($tid)) {
@@ -146,15 +146,17 @@ class CmdAfterAt extends BasicCli implements CommandExecutor {
 			$ts = implode(" ",$ts);
 			$when = strtotime($ts);
 		} else {
-			for ($ts = array_shift($args);
-				  ($when = strtotime($ts)) == false && count($args) > 1;
-				  $ts .= ' '.array_shift($args)) ;
+			foreach (array_shift($args) as $ts){
+            if(($when = strtotime($ts)) == false && count($args) > 1) {
+                    $ts .= ' '.array_shift($args);
+                }
+            }
 		}
-		if ($when == false) {
+		if (($when ?? false) == false) {
 			$c->sendMessage(mc::_("Unable to parse time specification %1%",$ts));
 			return false;
 		}
-		while ($when < time()) {
+		while (($when = $when ?? 0) < time()) {
 			$when += 86400; // We can not travel back in time...
 		}
 		$c->sendMessage(mc::_("Scheduled for %1%",date(DATE_RFC2822,$when)));

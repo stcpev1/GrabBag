@@ -11,9 +11,9 @@ abstract class PermUtils {
   /**
    * Register a permission on the fly...
    * @param Plugin $plugin - owning plugin
-   * @param str $name - permission name
-   * @param str $desc - permission description
-   * @param str $default - one of true,false,op,notop
+   * @param string $name - permission name
+   * @param string $desc - permission description
+   * @param string $default - one of true,false,op,notop
    */
   static public function add(Plugin $plugin, $name, $desc, $default) {
     $perm = new Permission($name,$desc,$default);

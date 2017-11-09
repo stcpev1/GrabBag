@@ -25,7 +25,7 @@ class CmdOps extends BasicCli implements CommandExecutor {
 								"usage" => mc::_("/ops"),
 								"permission" => "gb.cmd.ops"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if ($cmd->getName() != "ops") return false;
 
 		$txt = [ "" ];

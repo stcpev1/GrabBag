@@ -27,7 +27,7 @@ class CmdHeal extends BasicCli implements CommandExecutor {
 								"aliases" => ["cure"],
 								"permission" => "gb.cmd.heal"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if ($cmd->getName() != "heal") return false;
 		if (count($args) == 0) {
 			if (!MPMU::inGame($sender)) return true;

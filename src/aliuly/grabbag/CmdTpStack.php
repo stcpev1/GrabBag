@@ -33,7 +33,7 @@ class CmdTpStack extends BasicCli implements CommandExecutor {
 								"usage" => mc::_("/poptp"),
 								"permission" => "gb.cmd.pushpoptp"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		switch($cmd->getName()) {
 			case "pushtp":
 				return $this->cmdPushTp($sender,$args);

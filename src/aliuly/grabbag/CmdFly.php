@@ -25,7 +25,7 @@ class CmdFly extends BasicCli implements CommandExecutor {
 								"usage" => mc::_("/fly"),
 								"permission" => "gb.cmd.fly"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if (!MPMU::inGame($sender)) return true;
 		if ($cmd->getName() != "fly") return false;
 		if ($sender->getAllowFlight()) {

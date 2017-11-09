@@ -27,7 +27,7 @@ class CmdAs extends BasicCli implements CommandExecutor {
 								"aliases" => ["sudo"],
 								"permission" => "gb.cmd.sudo"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if ($cmd->getName() != "as") return false;
 		if (count($args) < 2) {
 			$sender->sendMessage(mc::_("Must specified a player and a command"));

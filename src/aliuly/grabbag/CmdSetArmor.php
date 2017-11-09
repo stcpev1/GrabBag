@@ -37,7 +37,7 @@ class CmdSetArmor extends BasicCli implements CommandExecutor {
 								"permission" => "gb.cmd.setarmor"]);
 	}
 
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if (count($args) == 0) return false;
 		$i = array_pop($args);
 		if (($type = ArmorItems::str2quality($i)) == ArmorItems::ERROR) {

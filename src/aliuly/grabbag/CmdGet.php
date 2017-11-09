@@ -49,7 +49,7 @@ class CmdGet extends BasicCli implements CommandExecutor {
 
 	}
 
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if (!isset($args[0])) return false;
 		if ($cmd->getName() == "gift") {
 			if (($receiver = $this->owner->getServer()->getPlayer($args[0])) == null) {

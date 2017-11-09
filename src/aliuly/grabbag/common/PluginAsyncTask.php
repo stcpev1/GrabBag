@@ -21,7 +21,7 @@ abstract class PluginAsyncTask extends AsyncTask{
 
 	/**
 	 * @param Plugin	$owner
-	 * @param str 		$callable		method from $owner to call
+	 * @param string 		$callable		method from $owner to call
 	 * @param array   $args				arguments to pass to callback method
 	 */
 	public function __construct(Plugin $owner, $callable, array $args = []){

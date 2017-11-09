@@ -30,7 +30,7 @@ class AliasCmd implements CommandExecutor {
     ]);
     $this->cmd = $cmd;
   }
-  public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+  public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
     $cmdline = $this->cmd;
     if (count($args)) $cmdline .= " ".implode(" ",$args);
     Cmd::exec($sender,[$cmdline],false);
@@ -52,7 +52,7 @@ class CmdAlias extends BasicCli implements CommandExecutor {
 								"usage" => mc::_("/alias [-f] [alias [command]]"),
 								"permission" => "gb.cmd.alias"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		switch($cmd->getName()) {
 			case "alias":
         return $this->cmdAlias($sender,$args);

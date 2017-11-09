@@ -31,7 +31,7 @@ class CmdFtServers extends BasicCli implements CommandExecutor {
 								"permission" => "gb.cmd.ftserver",
                 "aliases" => ["fts"]]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
     if ($cmd->getName() != "ftserver") return false;
     if (count($args) != 1) return false;
     $id = $args[0];

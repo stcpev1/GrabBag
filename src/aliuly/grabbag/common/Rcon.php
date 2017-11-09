@@ -20,12 +20,13 @@ abstract class Rcon {
 	 * Returns an array with [$socket,$id].  In the event of an error
 	 * returns a string with the error message.
 	 *
-	 * @param str $host - hostname or ip of remote server
+	 * @param string $host - hostname or ip of remote server
 	 * @param int $port - port to connect to
-	 * @param str $auth - secret key
-	 * @return str|array
+	 * @param string $auth - secret key
+	 * @return string|array
 	 */
   static public function connect($host,$port,$auth) {
+      $errno = $errstr = null;
 		if (!($sock = @fsockopen($host,$port, $errno, $errstr, 30))) {
 			return "Unable to open socket: $errstr ($errno)";
 		}
@@ -42,7 +43,7 @@ abstract class Rcon {
 
 	/**
 	 * @param Rcon::RCTYPE_COMMAND|Rcon::RCTYPE_AUTH $type
-	 * @param str $payload
+	 * @param string $payload
 	 * @param resource $sock
 	 * @param &int id
 	 * @return int
@@ -72,10 +73,10 @@ abstract class Rcon {
 	 * Sends a remote command
 	 *
 	 * Returns [$results,$type] or a string with the error message
-	 * @param str $cmd - command to execute
+	 * @param string $cmd - command to execute
 	 * @param resource $sock - connection from connect
 	 * @param &int $id - id counter from connect
-	 * @return  array|str
+	 * @return  array|string
 	 */
   static public function cmd($cmd,$sock,&$id) {
 		$myid = self::writePkt(self::RCTYPE_COMMAND,$cmd,$sock,$id);

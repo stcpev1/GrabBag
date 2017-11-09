@@ -8,13 +8,13 @@ use pocketmine\item\Item;
 abstract class ItemName {
 	/** @var array $xnames extended names */
 	static protected $xnames = null;
-	/** @var str[] $items Nice names for items */
+	/** @var string[] $items Nice names for items */
 	static protected $items = [];
-	/** @var str[] $usrnames Possibly localized names for items */
+	/** @var string[] $usrnames Possibly localized names for items */
 	static protected $usrnames = [];
 	/**
 	 * Initialize $usrnames
-	 * @param str[] $names - names to load
+	 * @param string[] $names - names to load
 	 */
 	static public function initUsrNames(array $names) {
 		self::$usrnames = $names;
@@ -22,7 +22,7 @@ abstract class ItemName {
 	/**
 	 * Load the specified item names.
 	 * Return number of items read, -1 in case of error.
-	 * @param str $f - Filename to load
+	 * @param string $f - Filename to load
 	 * @return int
 	 */
 	public static function loadUsrNames($f) {
@@ -95,7 +95,7 @@ abstract class ItemName {
 	 * for it.
 	 *
 	 * @param Item item
-	 * @return str
+	 * @return string
 	 */
 	static public function str(Item $item) {
 		$id = $item->getId();

@@ -35,7 +35,7 @@ class CmdCrash extends BasicCli implements CommandExecutor {
 								"usage" => mc::_("/crash [count|clean|show|ls]"),
 								"permission" => "gb.cmd.crash"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if ($cmd->getName() != "crash") return false;
 		if (count($args) == 0) $args = [ "count" ];
 		$scmd = strtolower(array_shift($args));

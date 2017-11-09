@@ -15,7 +15,7 @@ class Random extends BaseSelector {
 
     foreach($srv->getLevels() as $l) {
       foreach($l->getEntities() as $e) {
-        if (count($args) && !$owner->checkSelectors($args,$sender,$e)) continue;
+        if (count($args) && !self::checkSelectors($args,$sender,$e)) continue;
         if ($e instanceof Player) {
           $result[] = $e->getName();
         } else {

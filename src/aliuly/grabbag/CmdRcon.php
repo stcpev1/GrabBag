@@ -40,7 +40,7 @@ class CmdRcon extends BasicCli implements CommandExecutor {
 								"usage" => mc::_("/rcon <id> <command>"),
 								"permission" => "gb.cmd.rcon"]);
 	}
-	public function onCommand(CommandSender $c,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $c,Command $cmd,string $label, array $args) : bool{
 		if (count($args) == 0) return false;
 		if ($cmd->getName() != "rcon") return false;
 

@@ -50,7 +50,7 @@ class CmdPermMgr extends BasicCli implements CommandExecutor,Listener {
 		}
 	}
 
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if ($cmd->getName() != "perm") return false;
 		$pageNumber = $this->getPageNumber($args);
 		if (count($args) < 2) return false;

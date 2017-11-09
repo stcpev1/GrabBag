@@ -38,7 +38,7 @@ class CmdBlowUp extends BasicCli implements CommandExecutor {
 		$explosion->explodeB();
 		return true;
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if ($cmd->getName() != "blowup") return false;
 		if (count($args) == 0) return false;
 		$pl = $this->owner->getServer()->getPlayer($args[0]);

@@ -70,7 +70,7 @@ class CmdFreezeMgr extends BasicCli implements Listener,CommandExecutor {
 		$this->frosties = [];
 		$this->owner->getServer()->getPluginManager()->registerEvents($this, $this->owner);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if (count($args) == 0) {
 			$sender->sendMessage(mc::_("Frozen: %1%",count($this->frosties)));
 			if (count($this->frosties))

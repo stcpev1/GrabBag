@@ -54,7 +54,7 @@ class CmdReOp extends BasicCli implements Listener,CommandExecutor {
     }
 		return false;
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
     if (count($args) > 1) return false;
 		if (count($args) == 0) {
 			if (!MPMU::inGame($sender)) return true;

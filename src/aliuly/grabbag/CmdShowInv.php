@@ -35,7 +35,7 @@ class CmdShowInv extends BasicCli implements CommandExecutor {
 								"aliases" => ["armorsee"],
 								"permission" => "gb.cmd.seearmor"]);
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		$pageNumber = $this->getPageNumber($args);
 		if (count($args) != 1) {
 			$sender->sendMessage(mc::_("You must specify a player's name"));

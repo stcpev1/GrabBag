@@ -20,14 +20,14 @@ class GbRemoveServerEvent extends GrabBagEvent implements Cancellable {
    }
   /**
    * Returns the server id
-   * @return str
+   * @return string
    */
   public function getId() {
      return $this->serverId;
   }
   /**
    * Sets the server id
-   * @param str $id
+   * @param string $id
    */
   public function setId($id) {
      $this->serverId = $id;

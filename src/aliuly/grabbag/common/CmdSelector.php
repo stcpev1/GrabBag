@@ -47,9 +47,9 @@ abstract class CmdSelector {
    *
    * @param Server $server - Server context
    * @param CommandSender $sender - context executing this command
-   * @param str $cmdline - command line to expand
+   * @param string $cmdline - command line to expand
    * @param int $max - max number of expansions
-   * @return str[]|false
+   * @return string[]|false
    */
   static public function expandSelectors(Server $server, CommandSender $sender, $cmdline, $max= 100) {
 		$tokens = preg_split('/\s+/',$cmdline);

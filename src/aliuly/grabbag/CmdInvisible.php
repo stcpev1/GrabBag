@@ -58,7 +58,7 @@ class CmdInvisible extends BasicCli implements Listener,CommandExecutor {
 			}
 		}
 	}
-	public function onCommand(CommandSender $sender,Command $cmd,$label, array $args) {
+	public function onCommand(CommandSender $sender,Command $cmd,string $label, array $args) : bool{
 		if (count($args) !== 0) return false;
 		if ($cmd->getName() != "invis") return false;
 		if (!MPMU::inGame($sender)) return true;

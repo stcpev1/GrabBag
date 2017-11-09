@@ -3,6 +3,8 @@ namespace aliuly\grabbag\common\selectors;
 
 use pocketmine\command\CommandSender;
 use pocketmine\Server;
+use pocketmine\entity\Entity;
+use pocketmine\Player;
 
 /**
  * Base class for command selectors
@@ -11,7 +13,7 @@ abstract class BaseSelector {
   /**
    * Main entry point for command selectors
    */
-  static public function select(Server $srv, CommandSender $sender, array $args);
+  abstract static public function select(Server $srv, CommandSender $sender, array $args);
   /**
    * Implement selectors like m, name, etc...
    */
