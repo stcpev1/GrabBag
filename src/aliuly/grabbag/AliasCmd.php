@@ -1,5 +1,7 @@
 <?php
 
+namespace aliuly\grabbag;
+
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
 use pocketmine\command\Command;
