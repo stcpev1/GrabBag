@@ -108,7 +108,7 @@ class CmdWhois extends BasicCli implements CommandExecutor{
 			}
 		}
 		if(($pp = $pm->getPlugin("PurePerms")) !== null){
-			$txt[] = TextFormat::GREEN . mc::_("PurePerms Group: ") . TextFormat::WHITE . $pp->getUser($target)->getGroup()->getName();
+			$txt[] = TextFormat::GREEN . mc::_("PurePerms Group: ") . TextFormat::WHITE . $pp->getUserDataMgr()->getGroup($target)->getName();
 		}
 		if(($sa = $pm->getPlugin("SimpleAuth")) !== null){
 			if($target instanceof Player){

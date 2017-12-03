@@ -442,7 +442,7 @@ class ExpandVars{
 	 * @param array  &$vars - receives variable defintions
 	 */
 	public function purePermsPlayerVars(Player $player, array &$vars){
-		$vars["{group}"] = $this->api("PurePerms")->getUser($player)->getGroup()->getName();
+		$vars["{group}"] = $this->api("PurePerms")->getUserDataMgr()->getGroup($player)->getName();
 	}
 	///////////////////////////////////////////////////////////////////////////
 	// Misc Support functions
