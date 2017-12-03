@@ -19,7 +19,7 @@ use aliuly\grabbag\common\mc;
 use aliuly\grabbag\common\PermUtils;
 use aliuly\grabbag\common\MPMU;
 
-class CmdFtServers extends BasicCli implements CommandExecutor{
+class CmdFTServers extends BasicCli implements CommandExecutor{
 
 	public function __construct($owner){
 		parent::__construct($owner);

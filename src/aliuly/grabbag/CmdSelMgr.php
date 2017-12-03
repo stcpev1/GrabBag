@@ -23,16 +23,6 @@ use aliuly\grabbag\common\mc;
 use aliuly\grabbag\common\CmdSelector;
 use aliuly\grabbag\common\PermUtils;
 
-class PlayerCommandPreprocessEvent_sub extends PlayerCommandPreprocessEvent{
-}
-
-class RemoteServerCommandEvent_sub extends RemoteServerCommandEvent{
-}
-
-class ServerCommandEvent_sub extends ServerCommandEvent{
-}
-
-
 class CmdSelMgr extends BasicCli implements Listener{
 	protected $max;
 
@@ -103,4 +93,13 @@ class CmdSelMgr extends BasicCli implements Listener{
 	protected function processCmd($cmd, CommandSender $sender){
 		return CmdSelector::expandSelectors($this->owner->getServer(), $sender, $cmd, $this->max);
 	}
+}
+
+class PlayerCommandPreprocessEvent_sub extends PlayerCommandPreprocessEvent{
+}
+
+class RemoteServerCommandEvent_sub extends RemoteServerCommandEvent{
+}
+
+class ServerCommandEvent_sub extends ServerCommandEvent{
 }

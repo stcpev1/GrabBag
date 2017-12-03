@@ -9,7 +9,6 @@
 
 namespace aliuly\grabbag;
 
-use pocketmine\command\ConsoleCommandSender;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
 use pocketmine\command\Command;
@@ -18,31 +17,8 @@ use pocketmine\utils\TextFormat;
 use aliuly\grabbag\common\BasicCli;
 use aliuly\grabbag\common\mc;
 use aliuly\grabbag\common\MPMU;
-use aliuly\grabbag\common\Cmd;
 use aliuly\grabbag\common\PermUtils;
-
-class AliasCmd implements CommandExecutor{
-	protected $cmd;
-
-	public function __construct($owner, $alias, $cmd){
-		Cmd::addCommand($owner, $this, $alias, [
-			"description" => mc::_("Alias for %1%", $cmd),
-			"usage" => mc::_("/%1% [options]", $alias),
-		]);
-		$this->cmd = $cmd;
-	}
-
-	public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool{
-		$cmdline = $this->cmd;
-		if(count($args)) $cmdline .= " " . implode(" ", $args);
-		Cmd::exec($sender, [$cmdline], false);
-		return true;
-	}
-
-	public function getCmd(){
-		return $this->cmd;
-	}
-}
+use AliasCmd;
 
 class CmdAlias extends BasicCli implements CommandExecutor{
 	protected $aliases;
