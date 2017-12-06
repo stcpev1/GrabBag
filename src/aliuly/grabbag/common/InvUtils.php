@@ -3,6 +3,7 @@ namespace aliuly\grabbag\common;
 
 use pocketmine\item\Item;
 use pocketmine\Player;
+use pocketmine\item\ItemFactory;
 
 /**
  * Inventory related utilities
@@ -18,13 +19,13 @@ abstract class InvUtils{
 	}
 
 	/**
-	 * Clear hotbar
 	 * @param Player $target
+	 * @throws \TypeError
 	 */
 	static public function clearHotBar(Player $target){
 		$inv = $target->getInventory();
 		for($i = 0; $i < $inv->getHotbarSize(); $i++){
-			$inv->setHotbarSlotIndex($i, -1);
+			$inv->setItem($i, ItemFactory::get(Item::AIR, 0, 0));
 		}
 		// Make sure inventory is updated...
 		$inv->sendContents($target);
