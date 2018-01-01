@@ -117,7 +117,7 @@ class RepeatMgr implements Listener{
 	 * @priority LOWEST
 	 */
 	public function onPlayerCmd(PlayerCommandPreprocessEvent $ev){
-		if($ev->isCancelled()) return;
+		if($ev->isCancelled() or !$ev->getPlayer()->isOnline()) return;
 		if(!$ev->getPlayer()->hasPermission("gb.module.repeater")) return;
 		$res = $this->processCmd($ev->getMessage(), $ev->getPlayer());
 		if($res === false) return;
